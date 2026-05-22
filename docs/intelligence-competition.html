@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babel — Competition</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .comp-matrix {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.3fr 1fr 1fr 0.8fr;
+    gap: 0;
+    font-size: 12.5px;
+  }
+  .comp-matrix > div {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+  }
+  .comp-matrix > .head {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    background: var(--bg-1);
+  }
+  .comp-matrix .row-us {
+    background: var(--accent-soft);
+    border-left: 2px solid var(--accent);
+  }
+  .comp-matrix .row-us > div:first-child { color: var(--accent); font-weight: 600; }
+
+  .contagion-bars { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin: 12px 0; }
+  .contagion-bar { flex: 1; background: var(--bar-purple); opacity: 0.5; border-radius: 4px 4px 0 0; min-height: 4px; }
+  .contagion-bar.alert { background: var(--danger); opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="main-content"><main class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-head">
+    <div class="page-head-left">
+      <div class="eyebrow eyebrow-accent">Intelligence · Competition</div>
+      <h1 class="h1">The <em>category</em> view.</h1>
+      <p class="lead">Six brands. One category. When a competitor falls, the whole category often falls with them.</p>
+    </div>
+    <div class="page-head-right">
+      <select class="select">
+        <option>Last 7 days</option><option>Last 24 hours</option><option>Last 30 days</option>
+      </select>
+      <button class="btn btn-secondary btn-sm">Filters</button>
+      <button class="btn btn-secondary btn-sm">Export</button>
+    </div>
+  </header>
+
+  <!-- ===== COMPETITOR MATRIX ===== -->
+  <div class="card card-padded mb-4">
+    <div class="card-header">
+      <div>
+        <div class="card-eyebrow">Competitor matrix · last 7 days</div>
+        <div class="card-title">Share of voice · sentiment · weekly delta</div>
+      </div>
+    </div>
+
+    <div class="comp-matrix">
+      <div class="head">Brand</div>
+      <div class="head">Share of voice</div>
+      <div class="head">Sentiment</div>
+      <div class="head">Mentions</div>
+      <div class="head">Weekly Δ</div>
+      <div class="head"></div>
+
+      <div class="row-us">Mamaearth (you)</div>
+      <div class="row-us"><strong>28%</strong></div>
+      <div class="row-us"><span class="badge badge-success">+71 · strong</span></div>
+      <div class="row-us">2,847</div>
+      <div class="row-us text-pos">▲ 12%</div>
+      <div class="row-us"></div>
+
+      <div>Plum</div>
+      <div>22%</div>
+      <div><span class="badge badge-success">+68 · positive</span></div>
+      <div>2,238</div>
+      <div class="text-pos">▲ 18%</div>
+      <div><span class="badge badge-warning">Threat</span></div>
+
+      <div>The Moms Co</div>
+      <div>16%</div>
+      <div><span class="badge badge-success">+62 · positive</span></div>
+      <div>1,627</div>
+      <div class="text-pos">▲ 8%</div>
+      <div></div>
+
+      <div>Patanjali</div>
+      <div>19%</div>
+      <div><span class="badge badge-danger">−24 · crisis</span></div>
+      <div>1,932</div>
+      <div class="text-neg">▼ 41%</div>
+      <div><span class="badge badge-danger">Crisis</span></div>
+
+      <div>Biotique</div>
+      <div>10%</div>
+      <div><span class="badge badge-warning">+18 · mixed</span></div>
+      <div>1,017</div>
+      <div class="muted">▲ 2%</div>
+      <div></div>
+
+      <div style="border-bottom: none;">Forest Essentials</div>
+      <div style="border-bottom: none;">5%</div>
+      <div style="border-bottom: none;"><span class="badge badge-success">+74 · positive</span></div>
+      <div style="border-bottom: none;">508</div>
+      <div class="text-pos" style="border-bottom: none;">▲ 5%</div>
+      <div style="border-bottom: none;"></div>
+    </div>
+  </div>
+
+  <!-- ===== POSITIONING MAP + CONTAGION ===== -->
+  <div class="grid grid-2 mb-4" style="grid-template-columns: 1fr 1.2fr;">
+
+    <div class="card card-padded">
+      <div class="card-header">
+        <div>
+          <div class="card-eyebrow">Positioning map · Brand overall comparison</div>
+          <div class="card-title">Premium ↕ vs Natural-first ↔ Performance-first</div>
+        </div>
+      </div>
+      <div style="padding: 20px 36px;">
+        <div class="quad-map">
+          <div class="quad-dot us" style="left: 38%; bottom: 58%;"><div class="quad-dot-circle"></div><span class="quad-dot-label">Mamaearth</span></div>
+          <div class="quad-dot" style="left: 48%; bottom: 50%;"><div class="quad-dot-circle" style="background: var(--bar-blue);"></div><span class="quad-dot-label">Plum</span></div>
+          <div class="quad-dot" style="left: 32%; bottom: 42%;"><div class="quad-dot-circle" style="background: var(--bar-purple);"></div><span class="quad-dot-label">Moms Co</span></div>
+          <div class="quad-dot" style="left: 18%; bottom: 22%;"><div class="quad-dot-circle" style="background: var(--text-3);"></div><span class="quad-dot-label">Patanjali</span></div>
+          <div class="quad-dot" style="left: 80%; bottom: 82%;"><div class="quad-dot-circle" style="background: var(--bar-yellow);"></div><span class="quad-dot-label">Forest</span></div>
+          <div class="quad-dot" style="left: 58%; bottom: 30%;"><div class="quad-dot-circle" style="background: var(--text-3);"></div><span class="quad-dot-label">Biotique</span></div>
+          <div class="quad-axis-x"><span>← Natural-first</span><span>Performance-first →</span></div>
+          <div class="quad-axis-y"><span>Premium ↑</span><span>↓ Mass-market</span></div>
+        </div>
+      </div>
+      <div class="text-sm muted mt-3" style="line-height: 1.55;">
+        You and Plum sit in the same quadrant — the natural-premium fight is direct. Forest owns true premium. Patanjali is the soft underbelly being abandoned.
+      </div>
+    </div>
+
+    <div>
+      <div class="card-eyebrow mb-2">Category contagion · 7-day trajectory</div>
+      <div class="card card-padded">
+        <div class="flex-between">
+          <div>
+            <div class="h3">Patanjali "natural" backlash is splashing</div>
+            <div class="text-sm muted mt-1">5 days into a viral ingredient-labeling scandal</div>
+          </div>
+          <span class="badge badge-danger">Contagion risk</span>
+        </div>
+        <div class="contagion-bars">
+          <div class="contagion-bar" style="height: 18%"></div>
+          <div class="contagion-bar" style="height: 28%"></div>
+          <div class="contagion-bar" style="height: 42%"></div>
+          <div class="contagion-bar" style="height: 56%"></div>
+          <div class="contagion-bar" style="height: 68%"></div>
+          <div class="contagion-bar" style="height: 60%"></div>
+          <div class="contagion-bar alert" style="height: 84%"></div>
+        </div>
+        <div class="text-sm" style="line-height: 1.55;">
+          12% rise in skeptical mentions of <strong>any</strong> "natural-claim" brand — including
+          <strong class="text-accent">Mamaearth (89)</strong>, Plum (62), and Moms Co (47).
+        </div>
+      </div>
+
+      <div class="card card-accent mt-3">
+        <div class="card-eyebrow mb-2">Babel recommends</div>
+        <div class="h3 mb-2" style="font-family: var(--serif); font-style: italic; color: var(--accent); font-weight: 400;">Pre-emptive transparency play, this week.</div>
+        <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+          Plum and Moms Co are slow to react. First mover on a "behind our ingredients" series wins category trust.
+        </p>
+        <div class="flex gap-2 mt-3">
+          <button class="btn btn-accent btn-sm">Draft content plan</button>
+          <button class="btn btn-secondary btn-sm">Brief PR team</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMPETITOR CAMPAIGNS ===== -->
+  <div class="card-eyebrow mb-2">Competitor campaign signals</div>
+  <div class="grid grid-3 mb-4">
+    <div class="card">
+      <div class="flex-between mb-2">
+        <div class="h3">Plum's "Pure Plant"</div>
+        <span class="badge badge-warning">3d ago</span>
+      </div>
+      <div class="text-xs muted mb-3">12 influencers · est. ₹80L · vegan + clean</div>
+      <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+        Positioning hard on "vegan" + "clean ingredient" — direct overlap. Gained <strong class="text-accent">18% SoV</strong> this week.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="flex-between mb-2">
+        <div class="h3">Forest price drop</div>
+        <span class="badge badge-info">Premium</span>
+      </div>
+      <div class="text-xs muted mb-3">15% off · Tier-1 metros only</div>
+      <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+        Pushing downmarket. Not direct overlap, but signals premium segment softness.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="flex-between mb-2">
+        <div class="h3">Biotique pivot</div>
+        <span class="badge badge-soft">Watch</span>
+      </div>
+      <div class="text-xs muted mb-3">Celebrities → micro-influencers</div>
+      <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+        Same playbook Mamaearth used in 2023. May indicate margin pressure.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== MACRO SIGNALS ===== -->
+  <div class="card-eyebrow mb-2">Macro &amp; supply-chain signals</div>
+  <div class="grid grid-2 mb-4">
+    <div class="card card-danger">
+      <div class="flex-between mb-2">
+        <div class="h3">Palm oil spike — SE Asia</div>
+        <span class="badge badge-danger">Action needed</span>
+      </div>
+      <div class="text-xs muted mb-3">Week 2 · 23% above 6-month average</div>
+      <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+        Direct exposure on 3 SKUs (body wash, hair oil, lip care). Recommend procurement hedge.
+      </p>
+    </div>
+
+    <div class="card" style="background: var(--warning-soft); border-color: #F2D9B5;">
+      <div class="flex-between mb-2">
+        <div class="h3">DPDP Act enforcement chatter</div>
+        <span class="badge badge-warning">Monitor</span>
+      </div>
+      <div class="text-xs muted mb-3">Regulatory · India data privacy law</div>
+      <p class="text-sm" style="color: var(--text-2); line-height: 1.55;">
+        Industry whispers of first enforcement action. D2C consent flows may need audit.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== Continue ===== -->
+  <div class="flex-between mt-6" style="padding-top: 16px; border-top: 1px solid var(--line);">
+    <a href="intelligence-llm.html" class="btn btn-ghost btn-sm">← LLM Pulse</a>
+    <a href="actions.html" class="btn btn-accent btn-sm">
+      Continue to Action Center
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+</main></div>
+
+<script src="app.js"></script>
+<script>renderShell('intel-comp');</script>
+</body>
+</html>

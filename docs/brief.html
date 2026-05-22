@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babel — The CEO Brief</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .brief-paper {
+    background: linear-gradient(180deg, var(--surface-1) 0%, var(--surface) 100%);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-xl);
+    padding: 32px 40px;
+    max-width: 820px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .brief-paper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--bar-blue), var(--bar-pink), var(--bar-purple), var(--bar-yellow));
+  }
+  .brief-paper::after {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(232,121,176,0.10), transparent 70%);
+    pointer-events: none;
+  }
+
+  .brief-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line-2);
+    margin-bottom: 18px;
+  }
+  .brief-brand-block { display: flex; flex-direction: column; gap: 2px; }
+  .brief-brand {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .brief-issue {
+    font-size: 11.5px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+  }
+  .brief-sender {
+    text-align: right;
+    font-size: 10.5px;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .brief-sender-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .brief-greet {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.45;
+  }
+
+  .brief-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .brief-item:last-child { margin-bottom: 0; }
+  .brief-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--bar-pink);
+    line-height: 1;
+    font-weight: 400;
+    padding-top: 1px;
+    text-align: center;
+  }
+  .brief-body {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+  .brief-body .lead-line {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 13.5px;
+    letter-spacing: -0.005em;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .brief-body .accent {
+    color: var(--text);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 60%, rgba(232,121,176,0.30) 60%);
+    padding: 0 2px;
+  }
+  .brief-rec {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 7px 10px;
+    background: rgba(91,141,239,0.08);
+    border-left: 2px solid var(--bar-blue);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .brief-rec-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--bar-blue);
+    text-transform: uppercase;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .brief-foot {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 11px;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+  .brief-foot-link { color: var(--bar-blue); }
+
+  /* Sidebar metrics panel */
+  .brief-meta-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .meta-tile {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 9px 12px;
+  }
+  .meta-tile-label { font-size: 10px; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; }
+  .meta-tile-val { font-size: 18px; font-weight: 600; margin-top: 2px; letter-spacing: -0.02em; }
+  .meta-tile-val em { font-family: var(--serif); font-style: italic; color: var(--bar-pink); font-weight: 400; }
+  .meta-tile-delta { font-size: 10.5px; margin-top: 1px; }
+
+  @media (max-width: 760px) {
+    .brief-paper { padding: 32px 24px; }
+    .brief-meta-panel { grid-template-columns: 1fr 1fr; }
+    .brief-head { flex-direction: column; gap: 14px; align-items: flex-start; }
+    .brief-sender { text-align: left; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div id="main-content"><main class="page page-narrow">
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-head">
+    <div class="page-head-left">
+      <div class="eyebrow eyebrow-accent">The hero artifact</div>
+      <h1 class="h1 mt-2">One page. Five bullets. <em>Every</em> morning.</h1>
+      <p class="lead mt-3">Editorial synthesis — not a dashboard. This is what your CMO and CEO actually read. The AI compresses 2,847 mentions and 12 actions into the five things that genuinely matter.</p>
+    </div>
+    <div class="page-head-right">
+      <button class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0l-4-4m4 4l4-4"/><path d="M4 18v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Export PDF
+      </button>
+      <button class="btn btn-accent" onclick="approveBrief()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Approve &amp; schedule
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== DELIVERY INFO ===== -->
+  <div class="card card-info" style="display: flex; align-items: center; gap: 16px; padding: 14px 20px; margin-bottom: 28px;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--bar-blue); flex-shrink: 0;">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+    </svg>
+    <div style="flex: 1; font-size: 13.5px;">
+      Scheduled for delivery to <strong>ceo@mamaearth.in</strong>, <strong>cmo@mamaearth.in</strong>, and 4 SLT recipients — <strong>tomorrow 7:00 AM IST</strong>.
+    </div>
+    <button class="btn btn-ghost btn-sm">Edit recipients</button>
+  </div>
+
+  <!-- ===== Meta panel ===== -->
+  <div class="brief-meta-panel">
+    <div class="meta-tile">
+      <div class="meta-tile-label">Sentiment</div>
+      <div class="meta-tile-val"><em>+71</em></div>
+      <div class="meta-tile-delta text-pos">▲ 3 pts WoW</div>
+    </div>
+    <div class="meta-tile">
+      <div class="meta-tile-label">Share of voice</div>
+      <div class="meta-tile-val">28<span class="muted">%</span></div>
+      <div class="meta-tile-delta text-pos">▲ 2 pts</div>
+    </div>
+    <div class="meta-tile">
+      <div class="meta-tile-label">AI mention rate</div>
+      <div class="meta-tile-val">34<span class="muted">%</span></div>
+      <div class="meta-tile-delta text-pos">▲ 6 pts</div>
+    </div>
+    <div class="meta-tile">
+      <div class="meta-tile-label">Actions dispatched</div>
+      <div class="meta-tile-val">12</div>
+      <div class="meta-tile-delta muted">yesterday · 100% reviewed</div>
+    </div>
+  </div>
+
+  <!-- ===== THE BRIEF ===== -->
+  <article class="brief-paper">
+
+    <header class="brief-head">
+      <div class="brief-brand-block">
+        <span class="brief-brand">Mamaearth</span>
+        <span class="brief-issue">Monday brief · 20 May 2026 · Vol. 03, Issue 21</span>
+      </div>
+      <div class="brief-sender">
+        <span class="brief-sender-mark">
+          <svg width="22" height="18" viewBox="0 0 36 28" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1"  y="9"  width="4" height="14" rx="2" fill="#5B8DEF"/>
+            <rect x="8"  y="4"  width="4" height="20" rx="2" fill="#E879B0"/>
+            <rect x="15" y="11" width="4" height="11" rx="2" fill="#A77BC4"/>
+            <rect x="22" y="2"  width="4" height="24" rx="2" fill="#5B8DEF"/>
+            <rect x="29" y="7"  width="4" height="16" rx="2" fill="#F5B842"/>
+          </svg>
+          Babel
+        </span>
+        <span class="serif-i" style="color: var(--text-3);">Never be the last to know.</span>
+        <span style="color: var(--text-4);">5 min read · 2,847 sources · 5 LLMs</span>
+      </div>
+    </header>
+
+    <p class="brief-greet">Good morning Varun, Ghazal — here's what the world said about Mamaearth this week, and what we recommend.</p>
+
+    <div class="brief-item">
+      <div class="brief-num">i.</div>
+      <div class="brief-body">
+        <span class="lead-line">Brand pulse — steady, with one big lift.</span>
+        Sentiment at <span class="accent">+71</span>, up 3 points week-over-week. Share of voice climbed to <span class="accent">28%</span> (+2 pts). The clear driver: the <span class="accent">SPF 50 sunscreen</span> — 412 positive mentions this week, +92% positive sentiment. Onion hair oil also showing strong repeat-purchase signal (287 mentions).
+        <div class="brief-rec">
+          <span class="brief-rec-label">RECOMMEND</span>
+          <span>Amplify SPF 50 with the micro-influencer push this week. 11 advocates already identified; community team briefed yesterday.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-item">
+      <div class="brief-num">ii.</div>
+      <div class="brief-body">
+        <span class="lead-line">Coordinated attack underway.</span>
+        47 X accounts — all created in the last 30 days, posting at uniform times — are pushing <span class="accent">#MamaearthLies</span> with near-identical messaging. This is paid, not organic. Total reach so far: <span class="accent">180K</span>. PR and legal already briefed; transparency content + advocate orchestration approved Friday.
+        <div class="brief-rec">
+          <span class="brief-rec-label">RECOMMEND</span>
+          <span>Do not engage individually. Stay the course — transparency campaign goes live Thursday with full ingredient-sourcing video.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-item">
+      <div class="brief-num">iii.</div>
+      <div class="brief-body">
+        <span class="lead-line">AI visibility — moving up where it matters.</span>
+        Across 247 category prompts × 5 LLMs, your <span class="accent">mention rate hit 34%</span> (+6 pts). Claude moved Mamaearth to <span class="accent">#1 of 5</span> for "natural skincare brands." Perplexity sentiment surged to +78 on the back of SPF 50 launch press. <span class="accent">Watch-out:</span> Claude now ranks Plum first on "best vegan baby shampoo India" — drift detected three days ago, driven by Plum's "Pure Plant" campaign.
+        <div class="brief-rec">
+          <span class="brief-rec-label">RECOMMEND</span>
+          <span>Accelerate the vegan certification press release to this quarter (currently planned Q3). Feed Perplexity 3 more launch articles to sustain the surge.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-item">
+      <div class="brief-num">iv.</div>
+      <div class="brief-body">
+        <span class="lead-line">Category contagion — Patanjali's mess is splashing.</span>
+        Patanjali's ingredient-labeling backlash is spreading into "natural" and "herbal" personal care as a category. <span class="accent">12% rise</span> in skeptical mentions of natural-claim brands — including 89 mentions questioning Mamaearth specifically. Plum and Moms Co see similar pressure but have not yet responded.
+        <div class="brief-rec">
+          <span class="brief-rec-label">RECOMMEND</span>
+          <span>First-mover transparency play this week. Pre-empt the question with a "behind our ingredients" series. Draft attached. Wins category trust.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-item">
+      <div class="brief-num">v.</div>
+      <div class="brief-body">
+        <span class="lead-line">Macro signal — palm oil exposure widening.</span>
+        Palm oil prices in SE Asia have spiked <span class="accent">23%</span> above the 6-month average and are now in their second week. Three Mamaearth SKUs (body wash, hair oil, lip care) have direct ingredient exposure. Procurement notified Friday. Industry chatter also indicates the first DPDP Act enforcement action may be near — D2C consent flows worth auditing.
+        <div class="brief-rec">
+          <span class="brief-rec-label">RECOMMEND</span>
+          <span>Procurement to evaluate 6-month hedge by Friday. Legal to commission DPDP audit before Q3.</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="brief-foot">
+      <div>
+        Babel synthesised this brief from <strong style="color: var(--text-2);">2,847 conversations</strong> across 6 channels and 5 LLMs.<br>
+        Yesterday: <strong style="color: var(--text-2);">12 actions drafted, 12 approved &amp; dispatched</strong> by Shubh + the CX team. 0 escalations.
+      </div>
+      <div style="text-align: right;">
+        <a href="intelligence.html" class="brief-foot-link">→ Open full Intelligence Hub</a><br>
+        <a href="actions.html" class="brief-foot-link">→ Review action history</a><br>
+        <a href="#" class="brief-foot-link" style="color: var(--text-3);">→ Manage delivery preferences</a>
+      </div>
+    </footer>
+  </article>
+
+  <!-- ===== Why this matters ===== -->
+  <div style="max-width: 820px; margin: 36px auto 0;">
+    <div class="quote">
+      "Every existing tool sends the CEO a 15-page dashboard. Babel sends them this — one page, five bullets, every morning. They actually read it. Once a CEO trusts it, we're embedded in their routine. That's the moat."
+      <span class="quote-attrib">Why we built the Brief</span>
+    </div>
+  </div>
+
+  <!-- ===== Footer nav ===== -->
+  <div class="flex-between mt-8" style="max-width: 820px; margin: 36px auto 0; padding-top: 24px; border-top: 1px solid var(--line);">
+    <div>
+      <div class="serif-i muted" style="font-size: 14px;">The journey ends where it began — one engine, three surfaces, one human always in the loop.</div>
+    </div>
+    <a href="index.html" class="btn btn-secondary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+      Restart the journey
+    </a>
+  </div>
+
+</main></div>
+
+<script src="app.js"></script>
+<script>
+  renderShell('brief');
+  function approveBrief() {
+    toast('Brief approved · scheduled for 7:00 AM IST delivery.', { meta: 'ceo@mamaearth.in, cmo@mamaearth.in + 4 SLT · audit logged' });
+  }
+</script>
+</body>
+</html>

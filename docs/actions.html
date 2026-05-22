@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babel — Action Center</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ===== Single Action — split layout ===== */
+  .action-split {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 12px;
+    min-height: 560px;
+  }
+  /* Left queue */
+  .queue {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .queue-head {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .queue-title { font-size: 12.5px; font-weight: 600; }
+  .queue-filter {
+    padding: 8px 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+  .queue-list { flex: 1; overflow-y: auto; max-height: 520px; }
+  .q-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background var(--dur) var(--ease);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .q-item:hover { background: var(--neutral-soft); }
+  .q-item.selected {
+    background: linear-gradient(90deg, rgba(91,141,239,0.14), transparent 60%);
+  }
+  .q-item.selected::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 3px;
+    background: var(--bar-blue);
+    border-radius: 0 3px 3px 0;
+  }
+  .q-item.done { opacity: 0.45; }
+  .q-item.done::after {
+    content: '✓ sent';
+    position: absolute;
+    right: 12px; top: 14px;
+    font-size: 10.5px;
+    color: var(--success);
+    font-weight: 600;
+  }
+  .q-item-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: var(--text-3); }
+  .q-item-handle { color: var(--text); font-weight: 500; font-size: 12.5px; display: flex; align-items: center; gap: 6px; }
+  .q-item-preview { font-size: 13px; color: var(--text-2); line-height: 1.45; }
+  .q-item-foot { display: flex; gap: 6px; align-items: center; font-size: 11px; color: var(--text-3); }
+
+  /* Right detail pane */
+  .pane {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 14px 16px;
+  }
+  .pane-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--s-3);
+    margin-bottom: var(--s-3);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Source card */
+  .src-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--text-4);
+    border-radius: var(--r-md);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .src-card.crit { border-left-color: var(--danger); }
+  .src-card.pos  { border-left-color: var(--success); }
+  .src-card.attack { border-left-color: var(--bar-pink); }
+  .src-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .src-card-body { font-size: 14px; line-height: 1.5; }
+
+  /* Profile chips */
+  .profile-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  .profile-cell {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 7px 10px;
+  }
+  .profile-cell-label { font-size: 9.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .profile-cell-val { font-size: 13px; font-weight: 600; margin-top: 1px; }
+
+  /* Tone selector + draft */
+  .tone-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+
+  /* Confidence bar */
+  .conf-row { display: flex; gap: 14px; align-items: center; margin: 12px 0 6px; font-size: 11.5px; color: var(--text-3); }
+  .conf-bar { flex: 1; height: 4px; background: var(--neutral-soft); border-radius: 2px; overflow: hidden; max-width: 180px; }
+  .conf-bar > div { height: 100%; background: var(--bar-blue); border-radius: 2px; }
+
+  /* Audit */
+  .audit { font-size: 11.5px; color: var(--text-3); display: flex; flex-direction: column; gap: 4px; }
+  .audit div::before { content: '· '; }
+
+  /* ===== Bulk wizard ===== */
+  .bulk-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); }
+
+  /* Cohort (step 1) */
+  .cohort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px 16px; }
+  .cohort-block { display: flex; flex-direction: column; gap: 6px; }
+  .cohort-summary {
+    background: linear-gradient(180deg, rgba(232,121,176,0.10), rgba(232,121,176,0.02));
+    border: 1px solid rgba(232,121,176,0.32);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cohort-num { font-family: var(--sans); font-weight: 600; font-size: 36px; letter-spacing: -0.03em; color: var(--bar-pink); line-height: 1; }
+
+  /* Bulk preview table (step 2) */
+  .bulk-preview-table { font-size: 12.5px; }
+  .bulk-preview-table th { font-size: 10.5px; }
+  .bulk-row-personal { color: var(--text-2); line-height: 1.5; font-size: 12px; }
+  .bulk-row-personal mark { background: var(--accent-soft); color: var(--bar-pink); padding: 0 3px; border-radius: 3px; font-weight: 500; font-style: normal; }
+  .bulk-tone-radio { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* Safety dashboard (step 3) */
+  .safety-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px 16px 0; }
+  .safety-tile { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 10px 12px; }
+  .safety-check-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+  .safety-check-row:last-child { border-bottom: none; }
+  .safety-tick {
+    width: 22px; height: 22px;
+    border-radius: var(--r-full);
+    background: var(--success-soft);
+    color: var(--success);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .safety-tick.warn { background: var(--warning-soft); color: var(--warning); }
+  .safety-tick.fail { background: var(--danger-soft); color: var(--danger); }
+
+  /* Schedule (step 4) */
+  .schedule-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .schedule-opt {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+  }
+  .schedule-opt:hover { border-color: var(--line-2); }
+  .schedule-opt.active { border-color: var(--bar-blue); background: linear-gradient(180deg, rgba(91,141,239,0.10), var(--bg-1)); }
+  .schedule-opt-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .schedule-opt-sub { font-size: 11.5px; color: var(--text-3); line-height: 1.45; }
+
+  @media (max-width: 1080px) {
+    .action-split { grid-template-columns: 1fr; }
+    .cohort-grid, .safety-grid { grid-template-columns: 1fr; }
+    .profile-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="main-content"><main class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-head">
+    <div class="page-head-left">
+      <div class="eyebrow eyebrow-accent">Action Center</div>
+      <h1 class="h1 mt-2">AI drafts. A human <em>decides</em>.</h1>
+      <p class="lead mt-3">Twelve actions queued. Each one drafted, scored, brand-voice tuned. Nothing dispatches without your approval — and bulk replies are personalised, not copy-paste.</p>
+    </div>
+    <div class="page-head-right">
+      <button class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+        Regenerate queue
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== TABS ===== -->
+  <div class="tabs-lg" data-tabs="action">
+    <button class="tab active" data-tab="single">Single Action <span class="tab-count">12</span></button>
+    <button class="tab" data-tab="bulk">Bulk Reply-All <span class="tab-count">156</span></button>
+  </div>
+
+  <!-- ====================================================================
+       TAB 1 — SINGLE ACTION
+       ==================================================================== -->
+  <section class="tab-panel active" data-tab-group="action" data-tab-panel="single">
+
+    <div class="action-split">
+
+      <!-- Queue -->
+      <aside class="queue">
+        <div class="queue-head">
+          <span class="queue-title">Action queue</span>
+          <span class="badge badge-info">12 pending</span>
+        </div>
+        <div class="queue-filter">
+          <span class="chip active">All (12)</span>
+          <span class="chip">Critical (4)</span>
+          <span class="chip">Advocates (3)</span>
+          <span class="chip">Reviews (5)</span>
+        </div>
+        <div class="queue-list" id="queue-list"><!-- injected by JS --></div>
+      </aside>
+
+      <!-- Detail -->
+      <section class="pane" id="action-pane"><!-- injected by JS --></section>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       TAB 2 — BULK REPLY-ALL  (the new capability)
+       ==================================================================== -->
+  <section class="tab-panel" data-tab-group="action" data-tab-panel="bulk">
+
+    <!-- Stepper -->
+    <div class="stepper" id="bulk-stepper">
+      <div class="step active" data-step="1">
+        <span class="step-num">1</span><span>Define cohort</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="2">
+        <span class="step-num">2</span><span>AI personalisation</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="3">
+        <span class="step-num">3</span><span>Safety review</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="4">
+        <span class="step-num">4</span><span>Schedule &amp; dispatch</span>
+      </div>
+    </div>
+
+    <div class="bulk-wrap">
+
+      <!-- ============ STEP 1 — Define cohort ============ -->
+      <div class="wizard-panel" id="bulk-step-1">
+        <div class="cohort-grid">
+          <!-- Left: filters -->
+          <div>
+            <div class="card-eyebrow mb-3">Build the cohort</div>
+            <p class="text-sm muted mb-4" style="line-height: 1.55;">
+              Babel will reach out to every customer matching these filters. Each reply is individually personalised by AI — not a copy-paste blast.
+            </p>
+
+            <div class="cohort-block">
+              <label class="field-label">Theme</label>
+              <div class="flex gap-2 flex-wrap">
+                <span class="chip active">Delivery delay</span>
+                <span class="chip">Product damaged</span>
+                <span class="chip">Refund request</span>
+                <span class="chip">Wrong item</span>
+              </div>
+            </div>
+
+            <div class="cohort-block mt-4">
+              <label class="field-label">Source channel</label>
+              <div class="flex gap-2 flex-wrap">
+                <span class="chip active">Instagram DM</span>
+                <span class="chip active">Twitter mention</span>
+                <span class="chip">Email tickets</span>
+                <span class="chip">Amazon Q&amp;A</span>
+              </div>
+            </div>
+
+            <div class="cohort-block mt-4">
+              <label class="field-label">Sentiment</label>
+              <div class="flex gap-2 flex-wrap">
+                <span class="chip">Positive</span>
+                <span class="chip">Neutral</span>
+                <span class="chip active">Negative</span>
+              </div>
+            </div>
+
+            <div class="cohort-block mt-4">
+              <label class="field-label">Geography</label>
+              <div class="flex gap-2 flex-wrap">
+                <span class="chip">Pan-India</span>
+                <span class="chip active">Tier 2 cities</span>
+                <span class="chip">Metros only</span>
+              </div>
+            </div>
+
+            <div class="cohort-block mt-4">
+              <label class="field-label">Time window</label>
+              <select class="select" style="width: 220px;">
+                <option>Last 7 days</option>
+                <option>Last 14 days</option>
+                <option>Last 30 days</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Right: cohort summary -->
+          <div>
+            <div class="cohort-summary">
+              <div class="card-eyebrow text-accent">Matched cohort</div>
+              <div class="cohort-num">156</div>
+              <div class="text-sm muted">customers across <strong class="text-accent">4 Tier-2 cities</strong></div>
+              <div class="bars-h mt-4">
+                <div class="bars-h-row" style="grid-template-columns: 110px 1fr 40px;">
+                  <div class="bars-h-label">Bhubaneswar</div>
+                  <div class="bars-h-track"><div class="bars-h-fill pink" style="width:32%"></div></div>
+                  <div class="bars-h-value">50</div>
+                </div>
+                <div class="bars-h-row" style="grid-template-columns: 110px 1fr 40px;">
+                  <div class="bars-h-label">Patna</div>
+                  <div class="bars-h-track"><div class="bars-h-fill pink" style="width:26%"></div></div>
+                  <div class="bars-h-value">41</div>
+                </div>
+                <div class="bars-h-row" style="grid-template-columns: 110px 1fr 40px;">
+                  <div class="bars-h-label">Indore</div>
+                  <div class="bars-h-track"><div class="bars-h-fill pink" style="width:22%"></div></div>
+                  <div class="bars-h-value">34</div>
+                </div>
+                <div class="bars-h-row" style="grid-template-columns: 110px 1fr 40px;">
+                  <div class="bars-h-label">Kanpur</div>
+                  <div class="bars-h-track"><div class="bars-h-fill pink" style="width:20%"></div></div>
+                  <div class="bars-h-value">31</div>
+                </div>
+              </div>
+              <div class="text-xs muted mt-3" style="padding-top: 14px; border-top: 1px solid rgba(232,121,176,0.20);">
+                Average wait: <strong class="text-accent">4.2 days</strong> · highest urgency: <strong class="text-accent">6 days</strong> · estimated lost CLV if no action: <strong class="text-accent">₹3.8L</strong>
+              </div>
+            </div>
+
+            <div class="card mt-4">
+              <div class="card-eyebrow mb-2">What Babel will do for each customer</div>
+              <ul class="text-sm" style="color: var(--text-2); line-height: 1.7; padding-left: 18px;">
+                <li>Read their original message + order history</li>
+                <li>Pull live tracking from Shiprocket via API</li>
+                <li>Personalise tone to their tier &amp; sentiment</li>
+                <li>Attach an apology credit (₹100–₹250 by CLV)</li>
+                <li>Log to CX audit trail with reviewer name</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-end" style="padding: 10px 16px; border-top: 1px solid var(--line); background: var(--bg-1); border-radius: 0 0 var(--r-lg) var(--r-lg);">
+          <button class="btn btn-ghost">Save as preset</button>
+          <button class="btn btn-primary" onclick="goStep(2)">
+            Generate 156 personalised drafts
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ STEP 2 — Personalisation preview ============ -->
+      <div class="wizard-panel" id="bulk-step-2" style="display: none;">
+        <div style="padding: 14px 16px;">
+          <div class="flex-between mb-4">
+            <div>
+              <div class="card-eyebrow mb-1">AI personalisation preview</div>
+              <h3 class="h2">156 drafts ready — each one different.</h3>
+              <p class="text-sm muted mt-2" style="max-width: 640px; line-height: 1.55;">
+                Below is a sample of the 156 personalised replies. Each is tuned to that specific customer's message, city, order, and prior interactions. Hover any row to see the original DM.
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <span class="badge badge-success">Brand-voice match · 94% avg</span>
+              <span class="badge badge-info">Sentiment match · 91%</span>
+            </div>
+          </div>
+
+          <!-- Tone controls -->
+          <div class="card card-tight mb-4" style="display: flex; align-items: center; gap: 18px; padding: 12px 16px;">
+            <span class="text-sm muted">Global tone shift:</span>
+            <div class="bulk-tone-radio">
+              <span class="chip">More formal</span>
+              <span class="chip active">Apologetic + warm</span>
+              <span class="chip">Solution-first</span>
+              <span class="chip">Witty</span>
+            </div>
+            <div style="flex:1"></div>
+            <button class="btn btn-ghost btn-sm">Regenerate all</button>
+          </div>
+
+          <!-- Preview table -->
+          <div class="card card-tight" style="padding: 0; overflow: hidden;">
+            <table class="table bulk-preview-table">
+              <thead>
+                <tr>
+                  <th style="width: 32px;"><input type="checkbox" checked></th>
+                  <th>Customer</th>
+                  <th>City</th>
+                  <th>Their message</th>
+                  <th>Babel's personalised reply</th>
+                  <th style="width: 80px;">Score</th>
+                </tr>
+              </thead>
+              <tbody id="bulk-preview-rows"><!-- injected --></tbody>
+            </table>
+          </div>
+
+          <div class="flex-between mt-3 text-sm muted">
+            <span>Showing 6 of 156 · all 156 are draft-ready</span>
+            <a href="#" class="text-info">Load all 156 →</a>
+          </div>
+        </div>
+
+        <div class="flex-between" style="padding: 10px 16px; border-top: 1px solid var(--line); background: var(--bg-1); border-radius: 0 0 var(--r-lg) var(--r-lg);">
+          <button class="btn btn-ghost" onclick="goStep(1)">← Back to cohort</button>
+          <button class="btn btn-primary" onclick="goStep(3)">
+            Continue to safety review
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ STEP 3 — Safety review ============ -->
+      <div class="wizard-panel" id="bulk-step-3" style="display: none;">
+        <div style="padding: 14px 16px;">
+          <div class="flex-between mb-4">
+            <div>
+              <div class="card-eyebrow mb-1">Pre-flight safety</div>
+              <h3 class="h2">Before 156 messages go out, Babel runs the guardrails.</h3>
+              <p class="text-sm muted mt-2" style="max-width: 640px; line-height: 1.55;">
+                Every bulk send goes through hallucination check, PII scrub, tone consistency, brand-voice match, and a similarity floor (≥80% means they're actually personalised, not templated).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="safety-grid">
+          <div class="safety-tile">
+            <div class="card-eyebrow mb-1">Personalisation diversity</div>
+            <div class="display" style="font-size: 36px;">86<span class="muted" style="font-size: 16px;">%</span></div>
+            <div class="text-xs muted mt-1">drafts differ from each other (target ≥80%)</div>
+          </div>
+          <div class="safety-tile">
+            <div class="card-eyebrow mb-1">Avg brand-voice match</div>
+            <div class="display" style="font-size: 36px;">94<span class="muted" style="font-size: 16px;">%</span></div>
+            <div class="text-xs muted mt-1">vs Mamaearth's published brand book</div>
+          </div>
+          <div class="safety-tile">
+            <div class="card-eyebrow mb-1">Hallucination risk</div>
+            <div class="display" style="font-size: 36px; color: var(--success);">0</div>
+            <div class="text-xs muted mt-1">no fabricated orders / dates / SKUs</div>
+          </div>
+          <div class="safety-tile">
+            <div class="card-eyebrow mb-1">Need human review</div>
+            <div class="display" style="font-size: 36px; color: var(--warning);">3</div>
+            <div class="text-xs muted mt-1">flagged for sentiment edge cases</div>
+          </div>
+        </div>
+
+        <div style="padding: 14px 16px;">
+          <div class="card card-padded">
+            <div class="card-eyebrow mb-3">Guardrail checks · 8 of 8 passing</div>
+
+            <div class="safety-check-row">
+              <span class="safety-tick">✓</span>
+              <div style="flex:1">
+                <strong>PII scrub</strong> — no personal info shared in replies beyond what the customer disclosed
+                <div class="text-xs muted">scanned 156 drafts · no leakage</div>
+              </div>
+              <span class="badge badge-success">Pass</span>
+            </div>
+            <div class="safety-check-row">
+              <span class="safety-tick">✓</span>
+              <div style="flex:1">
+                <strong>Tone consistency</strong> — apologetic + warm across all 156
+                <div class="text-xs muted">σ = 0.08 (very tight); brand-book aligned</div>
+              </div>
+              <span class="badge badge-success">Pass</span>
+            </div>
+            <div class="safety-check-row">
+              <span class="safety-tick">✓</span>
+              <div style="flex:1">
+                <strong>Promise consistency</strong> — every draft offers the same ₹150 credit + 24h tracking
+                <div class="text-xs muted">100% adherence to the playbook</div>
+              </div>
+              <span class="badge badge-success">Pass</span>
+            </div>
+            <div class="safety-check-row">
+              <span class="safety-tick warn">!</span>
+              <div style="flex:1">
+                <strong>3 edge cases queued for human review</strong>
+                <div class="text-xs muted">2 customers already responded angrily to prior comms · 1 ongoing legal flag (Priya S., baby rash)</div>
+              </div>
+              <button class="btn btn-secondary btn-sm">Review the 3</button>
+            </div>
+            <div class="safety-check-row">
+              <span class="safety-tick">✓</span>
+              <div style="flex:1">
+                <strong>Rate-limit safe</strong> — at 30 msg/min, dispatch will take 6 minutes
+                <div class="text-xs muted">below Instagram, X, and Email API limits</div>
+              </div>
+              <span class="badge badge-success">Pass</span>
+            </div>
+            <div class="safety-check-row">
+              <span class="safety-tick">✓</span>
+              <div style="flex:1">
+                <strong>Audit trail attached</strong> — every reply will log: reviewer name, draft hash, time, and the prompt that produced it
+                <div class="text-xs muted">retrievable for 90 days · SOC2 compatible</div>
+              </div>
+              <span class="badge badge-success">Pass</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-between" style="padding: 10px 16px; border-top: 1px solid var(--line); background: var(--bg-1); border-radius: 0 0 var(--r-lg) var(--r-lg);">
+          <button class="btn btn-ghost" onclick="goStep(2)">← Back to drafts</button>
+          <button class="btn btn-primary" onclick="goStep(4)">
+            Looks good — schedule dispatch
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ STEP 4 — Schedule + dispatch ============ -->
+      <div class="wizard-panel" id="bulk-step-4" style="display: none;">
+        <div style="padding: 14px 16px;">
+          <div class="flex-between mb-4">
+            <div>
+              <div class="card-eyebrow mb-1">Schedule &amp; dispatch</div>
+              <h3 class="h2">When and how to send the 153 approved replies.</h3>
+              <p class="text-sm muted mt-2">3 held for human review · 153 ready to dispatch.</p>
+            </div>
+          </div>
+
+          <div class="card card-padded mb-4">
+            <div class="card-eyebrow mb-3">Pick a dispatch window</div>
+            <div class="schedule-options">
+              <div class="schedule-opt" onclick="pickSched(this)">
+                <div class="schedule-opt-title">Send immediately</div>
+                <div class="schedule-opt-sub">Begins now, finishes in ~6 min</div>
+              </div>
+              <div class="schedule-opt active" onclick="pickSched(this)">
+                <div class="schedule-opt-title">Today, 11:00 AM IST</div>
+                <div class="schedule-opt-sub">Recommended · highest reply-rate window for D2C in India</div>
+              </div>
+              <div class="schedule-opt" onclick="pickSched(this)">
+                <div class="schedule-opt-title">Custom schedule</div>
+                <div class="schedule-opt-sub">Stagger by city to feel human</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-padded mb-4">
+            <div class="card-eyebrow mb-3">Final summary · who you are about to message</div>
+            <div class="grid grid-4">
+              <div>
+                <div class="stat-label">Approved drafts</div>
+                <div class="display" style="font-size: 32px;">153</div>
+              </div>
+              <div>
+                <div class="stat-label">Held for review</div>
+                <div class="display" style="font-size: 32px; color: var(--warning);">3</div>
+              </div>
+              <div>
+                <div class="stat-label">Cost (apology credits)</div>
+                <div class="display" style="font-size: 32px;">₹22,950</div>
+              </div>
+              <div>
+                <div class="stat-label">Projected CLV saved</div>
+                <div class="display" style="font-size: 32px; color: var(--success);">₹3.8L</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-info card" style="padding: var(--s-4) var(--s-5); display: flex; gap: 14px; align-items: center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--bar-blue); flex-shrink: 0;"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><circle cx="12" cy="16.5" r="0.8" fill="currentColor"/></svg>
+            <div class="text-sm" style="line-height: 1.55;">
+              <strong>You are the reviewer of record.</strong> All 153 messages will be logged with your user ID and the AI prompt hash. You can revoke any reply within 60 seconds of dispatch.
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-between" style="padding: 10px 16px; border-top: 1px solid var(--line); background: var(--bg-1); border-radius: 0 0 var(--r-lg) var(--r-lg);">
+          <button class="btn btn-ghost" onclick="goStep(3)">← Back to safety review</button>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary">Save as draft</button>
+            <button class="btn btn-accent btn-lg" onclick="dispatchBulk()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Schedule 153 personalised replies
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+
+<script src="app.js"></script>
+<script>
+  renderShell('actions');
+
+  /* ====================================================================
+     SINGLE ACTION — queue + detail
+     ==================================================================== */
+  const QUEUE = [
+    {
+      id: 'priya', priority: 'critical', kind: 'distress',
+      src: 'ig', srcClass: 'src-icon-ig',
+      handle: 'Priya Sharma · @priya.s.mum', subhandle: 'Instagram · 2.4K followers',
+      time: '3h ago', preview: 'My baby developed a severe rash from the Mamaearth body wash. Hospitalized.',
+      body: '"My baby developed a severe rash from the Mamaearth body wash. Hospitalized. Please help! @mamaearth.in"',
+      profile: { 'Customer since': 'Jan 2024', 'LTV': '₹14,200', 'Prior tickets': '0', 'Risk flag': 'Legal' },
+      tone: 'empathetic',
+      drafts: {
+        empathetic: 'Priya, we are deeply sorry to hear about your baby\'s reaction — this is our worst nightmare and we take it incredibly seriously. Our senior CX lead, Aanya, is messaging you privately right now. We\'ll arrange a full medical consultation, refund, and a detailed batch investigation. We\'re here for your family, and we will do whatever is needed. — Team Mamaearth',
+        professional: 'Dear Priya, we have escalated your concern to our senior customer care team. Aanya will reach out via DM within the hour to arrange a medical review and a complete batch investigation. A full refund has been initiated. We take product safety with utmost seriousness. — Team Mamaearth',
+        warm: 'Priya, we are heartbroken reading this. Your baby\'s safety comes first — full stop. Aanya from our senior team is reaching out right now to help with the medical follow-up, refund, and a deep batch check. Please hold on; we are with you. — Team Mamaearth'
+      },
+      tags: [
+        { label: 'Tone: empathetic', kind: 'info' },
+        { label: 'Action: escalate to senior CX', kind: 'info' },
+        { label: 'Auto-trigger: batch quality review', kind: 'info' },
+        { label: 'Risk: high · legal flagged', kind: 'warning' }
+      ],
+      confidence: 96, voice: 96, sentMatch: 94, risk: 'high',
+      audit: [
+        'Drafted by Babel · 12 sec ago',
+        'Customer record pulled from Shopify · order #M-48211',
+        'Routed via "Distress" playbook v3.2 — last updated 14 days ago',
+        'Legal team auto-notified (background)'
+      ]
+    },
+    {
+      id: 'attack', priority: 'critical', kind: 'attack',
+      src: 'x', srcClass: 'src-icon-x',
+      handle: '47-account cluster · #MamaearthLies', subhandle: 'X / Twitter · coordinated pattern',
+      time: '5h ago', preview: '47 new accounts, uniform posting times, 92% message similarity. Likely paid.',
+      body: '"Mamaearth lies about being natural. Read the ingredients yourself. #MamaearthLies"',
+      profile: { 'Accounts': '47', 'All created': '<30 days', 'Similarity': '92%', 'Est. reach': '180K' },
+      tone: 'professional',
+      drafts: {
+        professional: 'Recommended response (3-step play):\n\n1. Do NOT engage individually — responses feed the bots. Mark all 47 accounts for platform reporting.\n\n2. Publish a transparency post on official channels: ingredient sourcing video + lab cert. Draft attached.\n\n3. Brief 5 micro-influencer advocates (Ananya Reddy +4) to share authentic content about Mamaearth ingredients this week. Increases positive signal vs. negative.\n\nOptional: legal review for coordinated brand attack pattern.',
+        empathetic: 'Recommended response (community-care first):\n\n1. Acknowledge customer concern at the category level — publish a "we hear you on natural claims" post.\n\n2. Don\'t name attackers; talk to the legitimately worried.\n\n3. Brief 5 advocate creators to share their own ingredient stories.\n\nLegal review of the attack pattern in parallel.',
+        warm: 'Three-step recommendation:\n\n1. Stay calm, don\'t feed bots — flag the cluster for platform review.\n\n2. Share warmth + transparency — "here\'s how we source, here\'s our lab" — film today.\n\n3. Activate 5 trusted advocate creators to lead the conversation.\n\nLegal team to review the cluster in parallel.'
+      },
+      tags: [
+        { label: 'Type: orchestrated response', kind: 'info' },
+        { label: 'Channels: official + influencer', kind: 'info' },
+        { label: 'Risk: medium · do not engage trolls', kind: 'warning' }
+      ],
+      confidence: 78, voice: 92, sentMatch: 88, risk: 'med',
+      audit: [
+        'Pattern detected by Babel cluster analysis · 1h ago',
+        'PR team auto-notified',
+        'Routed via "Coordinated attack" playbook v2.1',
+        'Legal team flagged in background'
+      ]
+    },
+    {
+      id: 'ananya', priority: 'opportunity', kind: 'advocate',
+      src: 'ig', srcClass: 'src-icon-ig',
+      handle: 'Ananya Reddy · @ananya.reddy', subhandle: 'Instagram · 47K followers · Beauty creator',
+      time: '6h ago', preview: 'Three weeks with the new SPF 50 — no breakouts, no white cast. Finally a sunscreen that works.',
+      body: '"Three weeks with Mamaearth\'s new SPF 50 — no breakouts, no white cast. Finally a sunscreen that works for Indian skin. ❤️"',
+      profile: { 'Followers': '47K', 'Engagement': '4.8%', 'Reach (avg)': '128K', 'Prior partnership': 'No' },
+      tone: 'warm',
+      drafts: {
+        warm: 'Ananya, this means the world ❤️ Indian skin deserves products that actually understand it — and we built the SPF 50 with that as the brief. Thank you for trusting it. DMing you about an upcoming collaboration we\'d love your honest take on. — Team Mamaearth',
+        empathetic: 'Ananya, thank you so much for sharing your experience. The Indian-skin angle is exactly the brief — we obsessed over the no-white-cast formula for two years. We\'d love your honest perspective on what\'s coming next. DM incoming. — Team Mamaearth',
+        professional: 'Hi Ananya, thank you for your detailed review of the SPF 50. We designed this product specifically for Indian skin types and your feedback validates the work. Our partnerships team will reach out via DM. — Team Mamaearth'
+      },
+      tags: [
+        { label: 'Tone: warm + opportunity', kind: 'info' },
+        { label: 'Follow-up: influencer DM', kind: 'info' },
+        { label: 'Pattern: 11 similar creators', kind: 'info' }
+      ],
+      confidence: 98, voice: 98, sentMatch: 96, risk: 'low',
+      audit: [
+        'Drafted by Babel · 22 sec ago',
+        'Cross-referenced with 11 similar high-engagement creators in last 72h',
+        'Routed via "Advocate amplification" playbook v4.0'
+      ]
+    },
+    {
+      id: 'reddit', priority: 'medium', kind: 'question',
+      src: 'reddit', srcClass: 'src-icon-reddit',
+      handle: 'u/skincare_curious', subhandle: 'r/IndianSkincare · 23 upvotes',
+      time: '9h ago', preview: 'Is Mamaearth\'s natural marketing actually backed by anything?',
+      body: '"Is Mamaearth\'s \'natural\' marketing actually backed by anything? Looking for honest reviews from this sub."',
+      profile: { 'Subreddit': 'r/IndianSkincare', 'Comments': '14', 'Tone': 'Curious, not hostile', 'Reach (est)': '12K' },
+      tone: 'professional',
+      drafts: {
+        professional: 'Hi! Mamaearth Team here — happy to share specifics. Our "natural" claim is regulated by the BIS and our ingredient % disclosures are on every product page (e.g. the Onion Hair Oil is 89% naturally-derived; we publish the exact breakdown). We also publish third-party lab certs at mamaearth.in/transparency. Genuinely open to any specific concerns — happy to answer here or DM. — Mamaearth Team',
+        warm: 'Hey u/skincare_curious — fair question, and one we get a lot. Short version: our "natural-derived %" is on every product page, we publish lab certs at mamaearth.in/transparency, and we\'re BIS-audited. Long version: ask us anything in this thread — we\'ll answer honestly, including the things we still want to do better.',
+        empathetic: 'Hey, completely fair question and we appreciate you asking publicly. We publish the natural-derived % per product on every PDP, and our third-party lab certs are live at mamaearth.in/transparency. We know "natural" can feel like marketing speak — we\'re trying to be specific about what we mean. Open to any deeper question, here or DM. — Mamaearth'
+      },
+      tags: [
+        { label: 'Tone: transparent', kind: 'info' },
+        { label: 'Channel: public reply', kind: 'info' },
+        { label: 'Compliance: BIS reference safe', kind: 'info' }
+      ],
+      confidence: 89, voice: 92, sentMatch: 90, risk: 'low',
+      audit: [
+        'Drafted by Babel · 1 min ago',
+        'Reddit voice profile applied (different from IG/X)',
+        'Compliance team auto-checked claim language'
+      ]
+    },
+    {
+      id: 'amazon', priority: 'medium', kind: 'review',
+      src: 'amazon', srcClass: 'src-icon-amazon',
+      handle: 'Rohit M. (Verified Buyer)', subhandle: 'Amazon · 1-star · Body wash',
+      time: '12h ago', preview: 'Scent of body wash changed completely after batch 2024B. Not what I bought before.',
+      body: '"Scent of body wash changed completely after batch 2024B. Not what I bought before. Disappointed."',
+      profile: { 'Customer since': 'Aug 2023', 'LTV': '₹4,800', 'Repeat purchases': '7', 'Prior reviews': '4 (avg 4.5★)' },
+      tone: 'empathetic',
+      drafts: {
+        empathetic: 'Rohit, thank you for flagging this — and we\'re sorry the change disappointed you. You\'re right that batch 2024B did update the scent profile (slightly less rose, more shea); the formulation change was based on consumer testing. We\'d love to send you the original-batch stock from our warehouse + a full refund on this order. Please DM us your order # and we\'ll arrange it. — Team Mamaearth',
+        professional: 'Hi Rohit, thank you for your review. Batch 2024B did include a minor scent reformulation. We\'d like to refund this purchase and ship you original-batch product from reserve inventory. Please reply with your order number. — Team Mamaearth',
+        warm: 'Rohit — thank you for being a long-time customer (7 repeats, we noticed!), and we\'re sorry the new batch threw you off. Yes, 2024B has a slightly tweaked scent. Will you let us send you original-batch stock + a refund on this one? DM us your order #. — Team Mamaearth'
+      },
+      tags: [
+        { label: 'Tone: empathetic', kind: 'info' },
+        { label: 'Offer: refund + original-batch swap', kind: 'info' },
+        { label: 'Repeat buyer · retention critical', kind: 'warning' }
+      ],
+      confidence: 93, voice: 95, sentMatch: 92, risk: 'low',
+      audit: [
+        'Drafted by Babel · 4 min ago',
+        'Inventory check: 18 units original-batch available in warehouse',
+        'Refund flow pre-authorised'
+      ]
+    },
+    {
+      id: 'yt', priority: 'low', kind: 'review',
+      src: 'yt', srcClass: 'src-icon-yt',
+      handle: 'BeautyBindas', subhandle: 'YouTube · 28K subs · mid-review video',
+      time: '1d ago', preview: 'Reviewing the SPF 50 — wants clarification on the niacinamide %.',
+      body: '"Review video posted — overall positive but flagged uncertainty on niacinamide percentage. Asked viewers to comment."',
+      profile: { 'Subs': '28K', 'Engagement': '3.1%', 'Tone': 'Thoughtful', 'Prior content': '2 Mamaearth videos' },
+      tone: 'professional',
+      drafts: {
+        professional: 'Hi BeautyBindas — thanks for the thoughtful review. To clarify: the SPF 50 contains 4% niacinamide (listed on the carton + PDP). Happy to send our lab sheet if useful for your viewers. — Mamaearth Team',
+        warm: 'Hey BeautyBindas — appreciate the careful review! On the niacinamide question: it\'s 4% (carton + PDP confirm). We can send a lab sheet for your viewers if helpful. Keep the honest reviews coming. — Mamaearth',
+        empathetic: 'Hi BeautyBindas — thank you for taking the time on this. Niacinamide is at 4% in the SPF 50; we should have made that clearer in the marketing. We\'ll send the lab sheet — feel free to share it with your community. — Mamaearth Team'
+      },
+      tags: [
+        { label: 'Tone: helpful + transparent', kind: 'info' },
+        { label: 'Provide: lab sheet attachment', kind: 'info' }
+      ],
+      confidence: 91, voice: 94, sentMatch: 92, risk: 'low',
+      audit: ['Drafted by Babel · 8 min ago']
+    },
+  ];
+
+  let selectedId = QUEUE[0].id;
+  let currentTone = QUEUE[0].tone;
+  const done = new Set();
+
+  // Source labels for short display
+  const SRC_LABELS = { ig: 'Instagram', x: 'X', reddit: 'Reddit', yt: 'YouTube', amazon: 'Amazon', news: 'News' };
+
+  function priorityBadge(p) {
+    if (p === 'critical')    return '<span class="badge badge-danger badge-dot">Critical</span>';
+    if (p === 'opportunity') return '<span class="badge badge-success badge-dot">Opportunity</span>';
+    if (p === 'medium')      return '<span class="badge badge-warning badge-dot">Medium</span>';
+    return '<span class="badge badge-soft badge-dot">Low</span>';
+  }
+
+  function renderQueue() {
+    const list = document.getElementById('queue-list');
+    list.innerHTML = QUEUE.map(item => `
+      <div class="q-item ${selectedId === item.id ? 'selected' : ''} ${done.has(item.id) ? 'done' : ''}" onclick="selectAction('${item.id}')">
+        <div class="q-item-top">
+          ${priorityBadge(item.priority)}
+          <span>${item.time}</span>
+        </div>
+        <div class="q-item-handle">
+          <span class="src-icon ${item.srcClass}" style="width:18px;height:18px;font-size:9px;">${item.src === 'x' ? '𝕏' : item.src === 'ig' ? 'IG' : item.src === 'reddit' ? 'R' : item.src === 'yt' ? '▶' : item.src === 'amazon' ? 'a' : 'N'}</span>
+          ${item.handle}
+        </div>
+        <div class="q-item-preview">${item.preview}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderPane() {
+    const item = QUEUE.find(q => q.id === selectedId);
+    if (!item) return;
+    const pane = document.getElementById('action-pane');
+    const isDone = done.has(item.id);
+
+    const tagsHtml = item.tags.map(t => `<span class="badge badge-${t.kind}">${t.label}</span>`).join('');
+    const profileHtml = Object.entries(item.profile).map(([k, v]) =>
+      `<div class="profile-cell"><div class="profile-cell-label">${k}</div><div class="profile-cell-val">${v}</div></div>`
+    ).join('');
+    const draft = item.drafts[currentTone] || Object.values(item.drafts)[0];
+
+    pane.innerHTML = `
+      <div class="pane-head">
+        <div>
+          <div class="flex gap-2 mb-2">${priorityBadge(item.priority)}<span class="badge badge-soft">${item.kind}</span></div>
+          <div class="h2">${item.handle}</div>
+          <div class="text-sm muted mt-1">${item.subhandle} · ${item.time}</div>
+        </div>
+        ${isDone
+          ? '<span class="ai-stamp text-pos">✓ Dispatched</span>'
+          : '<button class="btn btn-ghost btn-sm">Open in CRM →</button>'
+        }
+      </div>
+
+      <!-- Original mention -->
+      <div class="src-card ${item.kind === 'distress' ? 'crit' : item.kind === 'attack' ? 'attack' : item.kind === 'advocate' ? 'pos' : ''}">
+        <div class="src-card-meta">
+          <span><span class="src"><span class="src-icon ${item.srcClass}">${item.src === 'x' ? '𝕏' : item.src === 'ig' ? 'IG' : item.src === 'reddit' ? 'R' : item.src === 'yt' ? '▶' : item.src === 'amazon' ? 'a' : 'N'}</span> ${SRC_LABELS[item.src]} · original mention</span></span>
+          <span class="badge badge-soft">View thread →</span>
+        </div>
+        <div class="src-card-body">${item.body}</div>
+      </div>
+
+      <!-- Profile -->
+      <div class="card-eyebrow mb-2">Customer profile</div>
+      <div class="profile-grid">${profileHtml}</div>
+
+      <!-- AI draft -->
+      <div class="flex-between mt-3 mb-2">
+        <span class="ai-stamp">AI-drafted reply</span>
+        <span class="text-xs muted">Confidence ${item.confidence}% · brand-voice ${item.voice}% · sentiment match ${item.sentMatch}%</span>
+      </div>
+
+      <div class="ai-draft" contenteditable="${!isDone}" id="ai-draft" style="${isDone ? 'opacity: 0.6;' : ''}">${draft.replace(/\n/g, '<br>')}</div>
+
+      <div class="ai-tag-row">${tagsHtml}</div>
+
+      <div class="flex-between" style="margin-top: 6px;">
+        <div>
+          <div class="card-eyebrow mb-1">Adjust tone</div>
+          <div class="tone-row">
+            ${Object.keys(item.drafts).map(t => `<span class="chip ${currentTone === t ? 'active' : ''}" onclick="setTone('${t}')">${t.charAt(0).toUpperCase() + t.slice(1)}</span>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="card-eyebrow mb-1">Audit trail</div>
+          <div class="audit">${item.audit.map(a => `<div>${a}</div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      ${isDone
+        ? `<div class="card card-info" style="padding: 12px 16px; font-size: 13px;">✓ Sent at ${new Date().toTimeString().slice(0,5)} · logged to audit · reviewer: Shubh Garg</div>`
+        : `<div class="flex-between">
+            <div class="flex gap-2">
+              <button class="btn btn-primary" onclick="dispatchSingle()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>
+                Approve &amp; send
+              </button>
+              <button class="btn btn-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Save edit
+              </button>
+              <button class="btn btn-ghost">Escalate</button>
+            </div>
+            <button class="btn btn-ghost">Skip →</button>
+          </div>`
+      }
+    `;
+  }
+
+  function selectAction(id) { selectedId = id; currentTone = QUEUE.find(q => q.id === id).tone; renderQueue(); renderPane(); }
+  function setTone(t) { currentTone = t; renderPane(); }
+
+  function dispatchSingle() {
+    const item = QUEUE.find(q => q.id === selectedId);
+    done.add(item.id);
+    toast(`Reply to ${item.handle.split(' · ')[0]} sent.`, { meta: 'Logged · reviewer: Shubh Garg · audit trail attached' });
+    renderQueue();
+    renderPane();
+    // Auto-advance to next undone item
+    const next = QUEUE.find(q => !done.has(q.id));
+    if (next) setTimeout(() => selectAction(next.id), 900);
+  }
+
+  /* ====================================================================
+     BULK REPLY-ALL — wizard
+     ==================================================================== */
+
+  // Generate a sample of 6 customers for preview
+  const BULK_CUSTOMERS = [
+    { name: 'Sneha Behera',  city: 'Bhubaneswar', order: '#M-48871 (Onion Oil + Ubtan)', awb: 'SRT-9281', msg: 'Order placed 6 days ago, no update. Pls help.' },
+    { name: 'Rajeev Kumar',  city: 'Patna',       order: '#M-48902 (SPF 50)',            awb: 'SRT-9319', msg: 'Marked delivered but I haven\'t received it!' },
+    { name: 'Anjali Verma',  city: 'Indore',      order: '#M-48830 (Body Wash bundle)',  awb: 'SRT-9242', msg: '4 days late and zero communication. Disappointed.' },
+    { name: 'Vikram Singh',  city: 'Kanpur',      order: '#M-48947 (Hair Oil twin pack)',awb: 'SRT-9388', msg: 'No tracking update in 5 days. Where is my order?' },
+    { name: 'Priyanka Sahu', city: 'Bhubaneswar', order: '#M-48799 (Face Wash 3-pack)',  awb: 'SRT-9211', msg: 'Stuck in transit since Saturday. Need this urgently.' },
+    { name: 'Aman Pandey',   city: 'Patna',       order: '#M-48965 (Sunscreen + Lip)',   awb: 'SRT-9402', msg: 'Promised 2-day delivery, it\'s been 5. Refund?' },
+  ];
+
+  function highlight(text, customer) {
+    // Bold the personalized pieces so the reviewer can see what AI tailored
+    return text
+      .replace(customer.name.split(' ')[0], '<mark>$&</mark>')
+      .replace(customer.awb, '<mark>$&</mark>')
+      .replace(customer.order.match(/#M-\d+/)[0], '<mark>$&</mark>');
+  }
+
+  function renderBulkPreview() {
+    const tbody = document.getElementById('bulk-preview-rows');
+    tbody.innerHTML = BULK_CUSTOMERS.map((c, i) => {
+      const reply = personalizeReply(c);
+      return `
+        <tr>
+          <td><input type="checkbox" checked></td>
+          <td><strong>${c.name}</strong><div class="text-xs muted">${c.order.split(' (')[1].replace(')','')}</div></td>
+          <td>${c.city}</td>
+          <td class="bulk-row-personal" style="max-width: 240px;">${c.msg}</td>
+          <td class="bulk-row-personal">${highlight(reply, c)}</td>
+          <td><span class="badge badge-success">${94 + (i % 5)}%</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function goStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const panel = document.getElementById('bulk-step-' + i);
+      if (panel) panel.style.display = (i === n) ? 'block' : 'none';
+    }
+    const stepper = document.getElementById('bulk-stepper');
+    stepper.querySelectorAll('.step').forEach(s => {
+      const num = parseInt(s.dataset.step, 10);
+      s.classList.remove('active', 'done');
+      if (num < n) s.classList.add('done');
+      if (num === n) s.classList.add('active');
+    });
+    if (n === 2) renderBulkPreview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function pickSched(el) {
+    document.querySelectorAll('.schedule-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function dispatchBulk() {
+    toast('153 personalised replies scheduled for 11:00 AM IST.', {
+      meta: '3 held for human review · audit log open · cancel anytime within 60s'
+    });
+    goStep(1);
+  }
+
+  // First paint
+  renderQueue();
+  renderPane();
+</script>
+</body>
+</html>

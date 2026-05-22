@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babel — LLM Pulse</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .llm-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s-3); }
+
+  /* Drift timeline card */
+  .drift-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .drift-card.danger { border-color: #F2C9CC; background: var(--danger-soft); }
+  .drift-card.warn   { border-color: #F2D9B5; background: var(--warning-soft); }
+  .drift-card.success { border-color: #C7E5D8; background: var(--success-soft); }
+
+  .drift-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .drift-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
+  .drift-sub { font-size: 11.5px; color: var(--text-3); margin-top: 2px; line-height: 1.45; }
+  .drift-countdown {
+    background: white;
+    border: 1px solid currentColor;
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 92px;
+  }
+  .drift-card.danger .drift-countdown  { border-color: var(--danger); color: var(--danger); }
+  .drift-card.warn .drift-countdown    { border-color: var(--warning); color: var(--warning); }
+  .drift-card.success .drift-countdown { border-color: var(--success); color: var(--success); }
+  .drift-countdown-num { font-size: 18px; font-weight: 700; line-height: 1; }
+  .drift-countdown-lbl { font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; opacity: 0.85; }
+
+  /* Drift timeline bar */
+  .drift-timeline {
+    margin-top: 4px;
+  }
+  .drift-timeline-bar {
+    height: 6px;
+    background: white;
+    border: 1px solid currentColor;
+    border-radius: var(--r-full);
+    overflow: hidden;
+    position: relative;
+  }
+  .drift-card.danger .drift-timeline-bar { border-color: rgba(215,55,63,0.35); }
+  .drift-card.warn .drift-timeline-bar { border-color: rgba(184,110,0,0.35); }
+  .drift-card.success .drift-timeline-bar { border-color: rgba(38,142,108,0.35); }
+  .drift-timeline-fill {
+    height: 100%;
+    background: var(--danger);
+    border-radius: var(--r-full);
+  }
+  .drift-card.warn .drift-timeline-fill    { background: var(--warning); }
+  .drift-card.success .drift-timeline-fill { background: var(--success); }
+  .drift-timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--text-3);
+    margin-top: 4px;
+  }
+
+  /* Me-vs-competitors comparison table */
+  .vs-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .vs-table th, .vs-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: middle;
+  }
+  .vs-table th {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    background: var(--bg-1);
+  }
+  .vs-table th.brand-us { background: var(--accent-soft); color: var(--accent); }
+  .vs-table td.brand-us { background: rgba(252,234,242,0.45); font-weight: 500; color: var(--text); }
+  .vs-cell { display: inline-flex; align-items: center; gap: 6px; }
+  .vs-rank {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--r-sm);
+    background: var(--neutral-soft);
+    color: var(--text-2);
+  }
+  .vs-rank.win { background: var(--success-soft); color: var(--success); }
+  .vs-rank.lose { background: var(--danger-soft); color: var(--danger); }
+
+  /* Bad-sentiment top 5 list */
+  .bad-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bad-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 7px 10px;
+    background: white;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--danger);
+    border-radius: var(--r-sm);
+  }
+  .bad-rank {
+    width: 22px; height: 22px;
+    border-radius: var(--r-full);
+    background: var(--danger);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .bad-body { flex: 1; min-width: 0; }
+  .bad-q {
+    font-size: 12.5px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .bad-q .quote-mark { color: var(--text-3); }
+  .bad-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 10.5px;
+    color: var(--text-3);
+  }
+  .bad-sent { font-family: var(--mono); }
+  .bad-score {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .bad-score-val { font-size: 18px; font-weight: 700; color: var(--danger); line-height: 1; }
+  .bad-score-lbl { font-size: 9.5px; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+  @media (max-width: 1080px) {
+    .llm-grid-5 { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div id="main-content"><main class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-head">
+    <div class="page-head-left">
+      <div class="eyebrow eyebrow-accent">Intelligence · LLM Pulse</div>
+      <h1 class="h1">How the AI shelf <em>describes</em> you.</h1>
+      <p class="lead">247 prompts × 5 models. When customers ask ChatGPT for "the best toxin-free baby shampoo," you're either on the list, or you aren't.</p>
+    </div>
+    <div class="page-head-right">
+      <select class="select">
+        <option>Last 7 days</option><option>Last 24 hours</option><option>Last 30 days</option>
+      </select>
+      <button class="btn btn-secondary btn-sm">+ Add prompt</button>
+      <button class="btn btn-secondary btn-sm">Export</button>
+    </div>
+  </header>
+
+  <!-- ===== PER-LLM CARDS ===== -->
+  <div class="card-eyebrow mb-2">How each model talks about you</div>
+  <div class="llm-grid-5 mb-5">
+
+    <div class="llm-card" style="--llm-color: #10A37F;">
+      <div class="llm-card-head">
+        <span class="src-icon src-icon-gpt">G</span>
+        <span class="llm-card-name">ChatGPT</span>
+      </div>
+      <div class="flex-between">
+        <span class="display" style="font-size: 26px;">38<span class="muted" style="font-size: 13px;">%</span></span>
+        <span class="llm-pill up">▲ 8</span>
+      </div>
+      <div class="text-xs muted">mention rate · GPT-4o</div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Rank</span><span class="llm-card-row-val">2.1 / 5</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Sentiment</span><span class="llm-card-row-val text-pos">+74</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Top tag</span><span class="llm-card-row-val">"baby-safe"</span></div>
+    </div>
+
+    <div class="llm-card" style="--llm-color: #D97706;">
+      <div class="llm-card-head">
+        <span class="src-icon src-icon-claude">C</span>
+        <span class="llm-card-name">Claude</span>
+      </div>
+      <div class="flex-between">
+        <span class="display" style="font-size: 26px;">41<span class="muted" style="font-size: 13px;">%</span></span>
+        <span class="llm-pill up">▲ 4</span>
+      </div>
+      <div class="text-xs muted">mention rate · Sonnet 4.6</div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Rank</span><span class="llm-card-row-val">1.8 / 5</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Sentiment</span><span class="llm-card-row-val text-pos">+71</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Top tag</span><span class="llm-card-row-val">"natural"</span></div>
+    </div>
+
+    <div class="llm-card" style="--llm-color: #4285F4;">
+      <div class="llm-card-head">
+        <span class="src-icon src-icon-gemini">G</span>
+        <span class="llm-card-name">Gemini</span>
+      </div>
+      <div class="flex-between">
+        <span class="display" style="font-size: 26px;">22<span class="muted" style="font-size: 13px;">%</span></span>
+        <span class="llm-pill down">▼ 7</span>
+      </div>
+      <div class="text-xs muted">mention rate · 2.5 Pro</div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Rank</span><span class="llm-card-row-val">3.9 / 8</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Sentiment</span><span class="llm-card-row-val text-warn">+52</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Top tag</span><span class="llm-card-row-val">"affordable"</span></div>
+    </div>
+
+    <div class="llm-card" style="--llm-color: #20B8CD;">
+      <div class="llm-card-head">
+        <span class="src-icon src-icon-perplex">P</span>
+        <span class="llm-card-name">Perplexity</span>
+      </div>
+      <div class="flex-between">
+        <span class="display" style="font-size: 26px;">44<span class="muted" style="font-size: 13px;">%</span></span>
+        <span class="llm-pill up">▲ 11</span>
+      </div>
+      <div class="text-xs muted">mention rate · Sonar</div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Rank</span><span class="llm-card-row-val">2.0 / 5</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Sentiment</span><span class="llm-card-row-val text-pos">+78</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Top tag</span><span class="llm-card-row-val">"D2C leader"</span></div>
+    </div>
+
+    <div class="llm-card" style="--llm-color: #1F1F23;">
+      <div class="llm-card-head">
+        <span class="src-icon src-icon-grok">x</span>
+        <span class="llm-card-name">Grok</span>
+      </div>
+      <div class="flex-between">
+        <span class="display" style="font-size: 26px;">26<span class="muted" style="font-size: 13px;">%</span></span>
+        <span class="llm-pill down">▼ 2</span>
+      </div>
+      <div class="text-xs muted">mention rate · Grok 3</div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Rank</span><span class="llm-card-row-val">3.2 / 6</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Sentiment</span><span class="llm-card-row-val">+62</span></div>
+      <div class="llm-card-row"><span class="llm-card-row-label">Top tag</span><span class="llm-card-row-val">"D2C"</span></div>
+    </div>
+  </div>
+
+  <!-- ===== DRIFT ALERTS — with timeline ===== -->
+  <div class="flex-between mb-2">
+    <div>
+      <div class="card-eyebrow">Drift alerts · with probable drift timeline</div>
+      <div class="card-title mt-1">How long until each shift hardens into the default association</div>
+    </div>
+    <span class="text-xs muted">Based on 7-day citation velocity &amp; cross-LLM corroboration</span>
+  </div>
+
+  <div class="grid grid-3 mb-5">
+
+    <div class="drift-card danger">
+      <div class="drift-head">
+        <div style="flex: 1;">
+          <div class="drift-title">Claude now ranks Plum #1 on "best vegan baby shampoo India"</div>
+          <div class="drift-sub">3 days ago you were #1. Driver: Plum's "Pure Plant" campaign citations are spiking.</div>
+        </div>
+        <div class="drift-countdown">
+          <div class="drift-countdown-num">~14 d</div>
+          <div class="drift-countdown-lbl">to lock-in</div>
+        </div>
+      </div>
+      <div class="drift-timeline">
+        <div class="drift-timeline-bar"><div class="drift-timeline-fill" style="width: 32%;"></div></div>
+        <div class="drift-timeline-meta">
+          <span>Day 3 of ~17 estimated</span>
+          <span>32% to becoming default</span>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="actions.html" class="btn btn-danger btn-sm">Open response brief</a>
+        <button class="btn btn-ghost btn-sm">See evidence</button>
+      </div>
+    </div>
+
+    <div class="drift-card warn">
+      <div class="drift-head">
+        <div style="flex: 1;">
+          <div class="drift-title">Gemini sentiment slipped from +71 → +52</div>
+          <div class="drift-sub">Citing 3 Reddit threads questioning "natural" claims. Citation footprint matters.</div>
+        </div>
+        <div class="drift-countdown">
+          <div class="drift-countdown-num">~21 d</div>
+          <div class="drift-countdown-lbl">to lock-in</div>
+        </div>
+      </div>
+      <div class="drift-timeline">
+        <div class="drift-timeline-bar"><div class="drift-timeline-fill" style="width: 18%;"></div></div>
+        <div class="drift-timeline-meta">
+          <span>Day 2 of ~23 estimated</span>
+          <span>18% to becoming default</span>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary btn-sm">Investigate citations</button>
+      </div>
+    </div>
+
+    <div class="drift-card success">
+      <div class="drift-head">
+        <div style="flex: 1;">
+          <div class="drift-title">Perplexity sentiment surged to +78 (+11)</div>
+          <div class="drift-sub">SPF 50 launch press cited heavily. Sustain by feeding 3 more launch articles.</div>
+        </div>
+        <div class="drift-countdown">
+          <div class="drift-countdown-num">~9 d</div>
+          <div class="drift-countdown-lbl">to consolidate</div>
+        </div>
+      </div>
+      <div class="drift-timeline">
+        <div class="drift-timeline-bar"><div class="drift-timeline-fill" style="width: 64%;"></div></div>
+        <div class="drift-timeline-meta">
+          <span>Day 6 of ~9 estimated</span>
+          <span>64% locked-in (positive)</span>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary btn-sm">Amplify play</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BAD-SENTIMENT TOP 5 ===== -->
+  <div class="grid grid-2 mb-5" style="grid-template-columns: 1fr 1fr;">
+
+    <!-- Bad sentiment top 5 -->
+    <div class="card card-padded">
+      <div class="card-header">
+        <div>
+          <div class="card-eyebrow">Bad-sentiment top 5</div>
+          <div class="card-title">The queries hurting you most this week</div>
+        </div>
+        <span class="badge badge-danger">Fix first</span>
+      </div>
+
+      <div class="bad-list">
+        <div class="bad-item">
+          <div class="bad-rank">1</div>
+          <div class="bad-body">
+            <div class="bad-q"><span class="quote-mark">"</span>is Mamaearth actually natural<span class="quote-mark">"</span></div>
+            <div class="bad-meta"><span class="bad-sent">100% mention · sentiment +42</span><span>cited 14× this week</span></div>
+          </div>
+          <div class="bad-score">
+            <div class="bad-score-val">+42</div>
+            <div class="bad-score-lbl">sent.</div>
+          </div>
+        </div>
+
+        <div class="bad-item">
+          <div class="bad-rank">2</div>
+          <div class="bad-body">
+            <div class="bad-q"><span class="quote-mark">"</span>Mamaearth side effects baby<span class="quote-mark">"</span></div>
+            <div class="bad-meta"><span class="bad-sent">100% mention · sentiment mixed</span><span>cited 11×</span></div>
+          </div>
+          <div class="bad-score">
+            <div class="bad-score-val">±0</div>
+            <div class="bad-score-lbl">sent.</div>
+          </div>
+        </div>
+
+        <div class="bad-item">
+          <div class="bad-rank">3</div>
+          <div class="bad-body">
+            <div class="bad-q"><span class="quote-mark">"</span>best vegan baby shampoo India<span class="quote-mark">"</span></div>
+            <div class="bad-meta"><span class="bad-sent">80% mention · rank #3.2 (▼)</span><span>Plum ranks #1.4</span></div>
+          </div>
+          <div class="bad-score">
+            <div class="bad-score-val">+58</div>
+            <div class="bad-score-lbl">sent.</div>
+          </div>
+        </div>
+
+        <div class="bad-item">
+          <div class="bad-rank">4</div>
+          <div class="bad-body">
+            <div class="bad-q"><span class="quote-mark">"</span>Mamaearth ingredient transparency<span class="quote-mark">"</span></div>
+            <div class="bad-meta"><span class="bad-sent">68% mention · sentiment +18</span><span>cited 9×</span></div>
+          </div>
+          <div class="bad-score">
+            <div class="bad-score-val">+18</div>
+            <div class="bad-score-lbl">sent.</div>
+          </div>
+        </div>
+
+        <div class="bad-item">
+          <div class="bad-rank">5</div>
+          <div class="bad-body">
+            <div class="bad-q"><span class="quote-mark">"</span>Honasa stock concerns<span class="quote-mark">"</span></div>
+            <div class="bad-meta"><span class="bad-sent">52% mention · finance-press cited</span><span>cited 6×</span></div>
+          </div>
+          <div class="bad-score">
+            <div class="bad-score-val">+22</div>
+            <div class="bad-score-lbl">sent.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-end mt-3">
+        <a href="actions.html" class="btn btn-primary btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z"/></svg>
+          Draft remediation plan
+        </a>
+      </div>
+    </div>
+
+    <!-- Share of voice in AI -->
+    <div class="card card-padded">
+      <div class="card-header">
+        <div>
+          <div class="card-eyebrow">Share of voice in AI</div>
+          <div class="card-title">Mention frequency across 247 prompts × 5 LLMs</div>
+        </div>
+      </div>
+      <div class="bars-h">
+        <div class="bars-h-row">
+          <div class="bars-h-label" style="color: var(--accent); font-weight: 600;">Mamaearth (you)</div>
+          <div class="bars-h-track"><div class="bars-h-fill pink" style="width:34%"></div></div>
+          <div class="bars-h-value">34%</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Plum</div>
+          <div class="bars-h-track"><div class="bars-h-fill" style="width:28%"></div></div>
+          <div class="bars-h-value">28%</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">The Moms Co</div>
+          <div class="bars-h-track"><div class="bars-h-fill purple" style="width:18%"></div></div>
+          <div class="bars-h-value">18%</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Biotique</div>
+          <div class="bars-h-track"><div class="bars-h-fill" style="width:11%"></div></div>
+          <div class="bars-h-value">11%</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Forest Essentials</div>
+          <div class="bars-h-track"><div class="bars-h-fill yellow" style="width:6%"></div></div>
+          <div class="bars-h-value">6%</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Patanjali</div>
+          <div class="bars-h-track"><div class="bars-h-fill danger" style="width:3%"></div></div>
+          <div class="bars-h-value">3%</div>
+        </div>
+      </div>
+      <div class="text-sm muted mt-3" style="line-height: 1.55;">
+        You lead category mention rate — but Plum is gaining 4 pts/week. The "vegan baby" segment is where Plum is winning AI mindshare (see drift alerts).
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOP QUERIES · ME VS COMPETITORS ===== -->
+  <div class="card card-padded mb-4">
+    <div class="card-header">
+      <div>
+        <div class="card-eyebrow">Top queries · last 7 days · Me vs Competitors</div>
+        <div class="card-title">How each LLM ranks us against the rest of the category</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-xs muted">Filter:</span>
+        <span class="chip active" data-vs-filter="all">Both</span>
+        <span class="chip" data-vs-filter="good">Good</span>
+        <span class="chip" data-vs-filter="bad">Bad</span>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="vs-table" id="vs-table">
+        <thead>
+          <tr>
+            <th>Top query (last 7d)</th>
+            <th>Volume</th>
+            <th class="brand-us">Mamaearth</th>
+            <th>Plum</th>
+            <th>Moms Co</th>
+            <th>Biotique</th>
+            <th>Forest</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-vs="good">
+            <td><span class="quote-mark muted">"</span>best toxin-free baby shampoo India<span class="quote-mark muted">"</span></td>
+            <td class="muted">412 / wk</td>
+            <td class="brand-us"><span class="vs-rank win">#1.6</span></td>
+            <td><span class="vs-rank">#2.4</span></td>
+            <td><span class="vs-rank">#3.1</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-success badge-dot">Winning</span></td>
+          </tr>
+          <tr data-vs="good">
+            <td><span class="quote-mark muted">"</span>sunscreen for Indian skin no white cast<span class="quote-mark muted">"</span></td>
+            <td class="muted">387 / wk</td>
+            <td class="brand-us"><span class="vs-rank win">#1.3</span></td>
+            <td><span class="vs-rank">#2.8</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">#3.2</span></td>
+            <td><span class="badge badge-success badge-dot">Winning</span></td>
+          </tr>
+          <tr data-vs="bad">
+            <td><span class="quote-mark muted">"</span>best vegan baby shampoo India<span class="quote-mark muted">"</span></td>
+            <td class="muted">298 / wk</td>
+            <td class="brand-us"><span class="vs-rank lose">#3.2 ▼</span></td>
+            <td><span class="vs-rank win">#1.4</span></td>
+            <td><span class="vs-rank">#2.7</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-danger badge-dot">Losing</span></td>
+          </tr>
+          <tr data-vs="good">
+            <td><span class="quote-mark muted">"</span>onion hair oil that actually works<span class="quote-mark muted">"</span></td>
+            <td class="muted">241 / wk</td>
+            <td class="brand-us"><span class="vs-rank win">#1.0</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">#2.8</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-success badge-dot">Dominant</span></td>
+          </tr>
+          <tr data-vs="bad">
+            <td><span class="quote-mark muted">"</span>is Mamaearth actually natural<span class="quote-mark muted">"</span></td>
+            <td class="muted">196 / wk</td>
+            <td class="brand-us"><span class="vs-rank lose">+42 sent.</span></td>
+            <td><span class="vs-rank">n/a</span></td>
+            <td><span class="vs-rank">n/a</span></td>
+            <td><span class="vs-rank">n/a</span></td>
+            <td><span class="vs-rank">n/a</span></td>
+            <td><span class="badge badge-danger badge-dot">Reputational</span></td>
+          </tr>
+          <tr data-vs="good">
+            <td><span class="quote-mark muted">"</span>compare Mamaearth vs Plum<span class="quote-mark muted">"</span></td>
+            <td class="muted">187 / wk</td>
+            <td class="brand-us"><span class="vs-rank">tied</span></td>
+            <td><span class="vs-rank">tied</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-info badge-dot">Tied</span></td>
+          </tr>
+          <tr data-vs="bad">
+            <td><span class="quote-mark muted">"</span>Mamaearth side effects baby<span class="quote-mark muted">"</span></td>
+            <td class="muted">142 / wk</td>
+            <td class="brand-us"><span class="vs-rank lose">mixed</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-warning badge-dot">Sensitive</span></td>
+          </tr>
+          <tr data-vs="good">
+            <td><span class="quote-mark muted">"</span>D2C beauty brands India 2026<span class="quote-mark muted">"</span></td>
+            <td class="muted">128 / wk</td>
+            <td class="brand-us"><span class="vs-rank win">#2.0</span></td>
+            <td><span class="vs-rank">#3.0</span></td>
+            <td><span class="vs-rank">#4.2</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="badge badge-success badge-dot">Top-tier</span></td>
+          </tr>
+          <tr data-vs="bad">
+            <td><span class="quote-mark muted">"</span>Mamaearth ingredient transparency<span class="quote-mark muted">"</span></td>
+            <td class="muted">117 / wk</td>
+            <td class="brand-us"><span class="vs-rank lose">+18 sent.</span></td>
+            <td><span class="vs-rank">+62 sent.</span></td>
+            <td><span class="vs-rank">+58 sent.</span></td>
+            <td><span class="vs-rank">—</span></td>
+            <td><span class="vs-rank">+74 sent.</span></td>
+            <td><span class="badge badge-danger badge-dot">Behind</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex-between mt-3">
+      <span class="text-xs muted">Showing 9 of 247 prompts · sorted by volume</span>
+      <button class="btn btn-ghost btn-sm">Load all 247 →</button>
+    </div>
+  </div>
+
+  <!-- ===== Continue ===== -->
+  <div class="flex-between mt-6" style="padding-top: 16px; border-top: 1px solid var(--line);">
+    <a href="intelligence-social.html" class="btn btn-ghost btn-sm">← Social &amp; News</a>
+    <a href="intelligence-competition.html" class="btn btn-primary btn-sm">Continue to Competition →</a>
+  </div>
+
+</main></div>
+
+<script src="app.js"></script>
+<script>
+  renderShell('intel-llm');
+
+  // Bad/Good/Both filter for the Me-vs-Competitors table
+  document.querySelectorAll('[data-vs-filter]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('[data-vs-filter]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const f = chip.dataset.vsFilter;
+      document.querySelectorAll('#vs-table tbody tr').forEach(row => {
+        row.style.display = (f === 'all' || row.dataset.vs === f) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>
