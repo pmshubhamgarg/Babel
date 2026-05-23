@@ -6,7 +6,6 @@
 <title>Babel — Mamaearth Workspace</title>
 <link rel="stylesheet" href="styles.css">
 <style>
-<<<<<<< HEAD
   /* ===== Welcome strip ===== */
   .welcome-strip {
     display: flex;
@@ -130,91 +129,10 @@
   }
   .gen-hero-cta .meta {
     flex: 1;
-=======
-  /* Page-specific helpers */
-  .home-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 10px;
-  }
-
-  /* Generate CTA card */
-  .gen-card {
-    background: linear-gradient(135deg, var(--primary-soft) 0%, #F0E7FA 100%);
-    border: 1px solid var(--primary-line);
-    border-radius: var(--r-md);
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .gen-card-icon {
-    width: 32px; height: 32px;
-    border-radius: var(--r-sm);
-    background: var(--primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .gen-card-icon svg { width: 16px; height: 16px; }
-  .gen-card h3 { font-size: 13px; font-weight: 600; margin-bottom: 1px; color: var(--text); }
-  .gen-card p { font-size: 11px; color: var(--text-3); line-height: 1.4; }
-
-  /* Status strip */
-  .kpi-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: var(--s-3);
-  }
-
-  /* Headlines list */
-  .hl-list {
-    display: flex;
-    flex-direction: column;
-  }
-  .hl-row {
-    display: flex;
-    gap: 10px;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    transition: background var(--dur) var(--ease);
-    align-items: flex-start;
-  }
-  .hl-row:hover { background: var(--bg-1); }
-  .hl-row:last-child { border-bottom: none; }
-  .hl-row-icon {
-    width: 24px; height: 24px;
-    border-radius: var(--r-sm);
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11.5px;
-    font-weight: 700;
-  }
-  .hl-row-icon.danger  { background: var(--danger-soft); color: var(--danger); }
-  .hl-row-icon.success { background: var(--success-soft); color: var(--success); }
-  .hl-row-icon.info    { background: var(--info-soft);    color: var(--info); }
-  .hl-row-icon.warn    { background: var(--warning-soft); color: var(--warning); }
-  .hl-row-body { flex: 1; min-width: 0; }
-  .hl-row-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-    margin-bottom: 1px;
-  }
-  .hl-row-sub {
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     font-size: 11px;
     color: var(--text-3);
     line-height: 1.4;
   }
-<<<<<<< HEAD
 
   /* ===== Right column — Quick links ===== */
   .quick-links {
@@ -238,44 +156,6 @@
   }
   .ql-icon {
     width: 26px; height: 26px;
-=======
-  .hl-row-meta {
-    font-size: 10px;
-    color: var(--text-4);
-    margin-top: 3px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  /* Quick-access tiles (2x2 grid) */
-  .qa-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .qa-tile {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    transition: all var(--dur) var(--ease);
-  }
-  .qa-tile:hover {
-    border-color: var(--line-strong);
-    box-shadow: var(--shadow-sm);
-  }
-  .qa-tile-head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .qa-icon {
-    width: 22px; height: 22px;
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     border-radius: var(--r-sm);
     display: inline-flex;
     align-items: center;
@@ -283,7 +163,6 @@
     color: white;
     flex-shrink: 0;
   }
-<<<<<<< HEAD
   .ql-icon svg { width: 13px; height: 13px; }
   .ql-icon.blue { background: var(--bar-blue); }
   .ql-icon.pink { background: var(--bar-pink); }
@@ -299,22 +178,11 @@
   }
   .ql-pill {
     font-size: 10px;
-=======
-  .qa-icon svg { width: 12px; height: 12px; }
-  .qa-icon.blue   { background: var(--bar-blue); }
-  .qa-icon.pink   { background: var(--bar-pink); }
-  .qa-icon.purple { background: var(--bar-purple); }
-  .qa-icon.yellow { background: var(--bar-yellow); color: #4A3500; }
-  .qa-name { font-size: 12px; font-weight: 600; flex: 1; }
-  .qa-pill {
-    font-size: 9.5px;
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     font-weight: 600;
     padding: 1px 6px;
     border-radius: var(--r-full);
     background: var(--neutral-soft);
     color: var(--text-3);
-<<<<<<< HEAD
     flex-shrink: 0;
   }
   .ql-pill.urgent { background: var(--danger-soft); color: var(--danger); }
@@ -362,25 +230,11 @@
     border-radius: var(--r-full);
     background: var(--success);
     flex-shrink: 0;
-=======
-  }
-  .qa-pill.urgent { background: var(--danger-soft); color: var(--danger); }
-  .qa-pill.new    { background: var(--primary-soft); color: var(--primary-2); }
-  .qa-sub {
-    font-size: 11px;
-    color: var(--text-3);
-    line-height: 1.4;
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
   }
 
   @media (max-width: 980px) {
     .home-grid { grid-template-columns: 1fr; }
-<<<<<<< HEAD
     .sources-grid { grid-template-columns: repeat(3, 1fr); }
-=======
-    .kpi-strip { grid-template-columns: 1fr 1fr; }
-    .qa-grid { grid-template-columns: 1fr; }
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
   }
 </style>
 </head>
@@ -388,7 +242,6 @@
 
 <div id="main-content"><main class="page">
 
-<<<<<<< HEAD
   <!-- ===== WELCOME STRIP ===== -->
   <div class="welcome-strip">
     <span><strong>Welcome back, Shubh.</strong></span>
@@ -541,191 +394,6 @@
 </main></div>
 
 <!-- ===== GENERATE OVERLAY (unchanged) ===== -->
-=======
-  <!-- ===== TOOLBAR HEADER ===== -->
-  <header class="page-head">
-    <div class="page-head-left">
-      <div class="eyebrow eyebrow-accent">Monday · 19 May 2026 · 09:42 IST</div>
-      <h1 class="h1">Mamaearth workspace</h1>
-      <p class="lead">2,847 mentions ingested · 5 LLMs probed · 12 actions queued for your review</p>
-    </div>
-    <div class="page-head-right">
-      <select class="select">
-        <option>Last 7 days</option>
-        <option>Last 24 hours</option>
-        <option>Last 30 days</option>
-      </select>
-      <button class="btn btn-secondary btn-sm">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
-        Refresh
-      </button>
-      <button class="btn btn-primary" onclick="runGenerate()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z"/></svg>
-        Generate insights
-      </button>
-    </div>
-  </header>
-
-  <!-- ===== KPI STRIP ===== -->
-  <div class="kpi-strip">
-    <div class="stat">
-      <div class="stat-label">Mentions · 7d</div>
-      <div class="stat-value" id="stat-mentions">2,847</div>
-      <div class="stat-delta up">▲ 12% vs last week</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Sentiment</div>
-      <div class="stat-value"><em>+71</em></div>
-      <div class="stat-delta up">▲ 3 pts</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">AI visibility</div>
-      <div class="stat-value">34<span class="muted">%</span></div>
-      <div class="stat-delta up">▲ 6 pts</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Actions queued</div>
-      <div class="stat-value">23 <span class="text-warn" style="font-size: 12px; font-weight: 500;">· 4 critical</span></div>
-      <div class="stat-delta flat">last cleared 2h ago</div>
-    </div>
-  </div>
-
-  <!-- ===== MAIN 2-COL GRID ===== -->
-  <div class="home-grid">
-
-    <!-- LEFT: Today's intelligence (headlines list) -->
-    <section class="card" style="padding: 0;">
-      <div class="card-header" style="padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--line); margin-bottom: 0;">
-        <div>
-          <div class="card-eyebrow" style="margin-bottom: 0;">Today, in five signals</div>
-          <div class="card-title mt-1">What broke through the noise</div>
-        </div>
-        <a href="brief.html" class="btn btn-ghost btn-sm">Read full brief →</a>
-      </div>
-
-      <div class="hl-list">
-        <a href="actions.html" class="hl-row">
-          <div class="hl-row-icon danger">!</div>
-          <div class="hl-row-body">
-            <div class="hl-row-title">Distress signal — Priya S. baby rash, hospitalised</div>
-            <div class="hl-row-sub">2.4K-follower IG post tagging @mamaearth.in. Legal flagged. Babel has drafted an empathetic senior-CX response.</div>
-            <div class="hl-row-meta"><span class="badge badge-danger badge-dot">Critical</span><span>3h ago · Instagram</span></div>
-          </div>
-        </a>
-
-        <a href="intelligence-social.html" class="hl-row">
-          <div class="hl-row-icon warn">↗</div>
-          <div class="hl-row-body">
-            <div class="hl-row-title">47 X accounts coordinating #MamaearthLies push</div>
-            <div class="hl-row-sub">All &lt;30 days old, uniform posting times, 92% message similarity. This is paid, not organic. Reach so far: 180K.</div>
-            <div class="hl-row-meta"><span class="badge badge-warning badge-dot">Coordinated</span><span>5h ago · X / Twitter</span></div>
-          </div>
-        </a>
-
-        <a href="intelligence-social.html" class="hl-row">
-          <div class="hl-row-icon success">↑</div>
-          <div class="hl-row-body">
-            <div class="hl-row-title">SPF 50 breaking out — 412 mentions, +92% positive</div>
-            <div class="hl-row-sub">Driven by 11 micro-influencer posts in 36 hours. Indian-skin-friendly angle is sticking. Babel queued amplification outreach.</div>
-            <div class="hl-row-meta"><span class="badge badge-success badge-dot">Opportunity</span><span>6h ago · Instagram</span></div>
-          </div>
-        </a>
-
-        <a href="intelligence-llm.html" class="hl-row">
-          <div class="hl-row-icon warn">≈</div>
-          <div class="hl-row-body">
-            <div class="hl-row-title">Claude now ranks Plum #1 on "vegan baby shampoo India"</div>
-            <div class="hl-row-sub">3 days ago you were #1. Drift driven by Plum's "Pure Plant" campaign. Action: accelerate vegan cert release.</div>
-            <div class="hl-row-meta"><span class="badge badge-warning badge-dot">LLM drift</span><span>3d ago · Claude</span></div>
-          </div>
-        </a>
-
-        <a href="intelligence-competition.html" class="hl-row">
-          <div class="hl-row-icon info">◐</div>
-          <div class="hl-row-body">
-            <div class="hl-row-title">Patanjali's "natural" backlash is splashing onto the category</div>
-            <div class="hl-row-sub">12% rise in skeptical mentions of natural-claim brands across India. First mover on transparency wins this week.</div>
-            <div class="hl-row-meta"><span class="badge badge-info badge-dot">Category</span><span>1d ago · cross-source</span></div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- RIGHT: Generate CTA + Quick access -->
-    <div class="flex-col gap-4">
-
-      <!-- Generate insights CTA -->
-      <div class="gen-card">
-        <div class="gen-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z"/><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"/></svg>
-        </div>
-        <div style="flex: 1;">
-          <h3>Run on-demand intelligence</h3>
-          <p>6 sources · 4 AI stages · 247 LLM prompts · ~90 sec</p>
-        </div>
-        <button class="btn btn-primary" onclick="runGenerate()">Run now</button>
-      </div>
-
-      <!-- Quick-access 2x2 -->
-      <div>
-        <div class="card-eyebrow mb-3">Workspace</div>
-        <div class="qa-grid">
-          <a href="intelligence-social.html" class="qa-tile">
-            <div class="qa-tile-head">
-              <span class="qa-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-7-7M5 12a7 7 0 0 0 7 7"/></svg></span>
-              <span class="qa-name">Social &amp; News</span>
-              <span class="qa-pill">2,847</span>
-            </div>
-            <div class="qa-sub">Themes · sentiment · alerts</div>
-          </a>
-
-          <a href="intelligence-llm.html" class="qa-tile">
-            <div class="qa-tile-head">
-              <span class="qa-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3"/><path d="M12 5a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3"/><path d="M9 10H7a2 2 0 0 0 0 4h2"/><path d="M15 10h2a2 2 0 0 1 0 4h-2"/></svg></span>
-              <span class="qa-name">LLM Pulse</span>
-              <span class="qa-pill new">1 drift</span>
-            </div>
-            <div class="qa-sub">247 prompts · 5 models</div>
-          </a>
-
-          <a href="intelligence-competition.html" class="qa-tile">
-            <div class="qa-tile-head">
-              <span class="qa-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-7 7 7v11M9 21v-6h6v6"/></svg></span>
-              <span class="qa-name">Competition</span>
-              <span class="qa-pill">6 brands</span>
-            </div>
-            <div class="qa-sub">Patanjali in crisis · Plum gaining</div>
-          </a>
-
-          <a href="actions.html" class="qa-tile">
-            <div class="qa-tile-head">
-              <span class="qa-icon pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></span>
-              <span class="qa-name">Action Center</span>
-              <span class="qa-pill urgent">4 critical</span>
-            </div>
-            <div class="qa-sub">12 single + 156-customer bulk</div>
-          </a>
-        </div>
-      </div>
-
-      <!-- Brief preview -->
-      <a href="brief.html" class="card card-link" style="padding: var(--s-3) var(--s-4); display: flex; align-items: center; gap: var(--s-3);">
-        <span class="qa-icon" style="background: var(--text); color: white;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
-        </span>
-        <div style="flex: 1;">
-          <div style="font-size: 13px; font-weight: 600;">Today's CEO brief is ready</div>
-          <div class="qa-sub">5 bullets · scheduled for 7:00 AM tomorrow</div>
-        </div>
-        <span class="btn-ghost btn btn-sm">Open →</span>
-      </a>
-    </div>
-  </div>
-
-</main></div>
-
-<!-- ===== GENERATE OVERLAY ===== -->
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
 <div class="gen-overlay" id="gen-overlay">
   <div class="gen-stage">
     <div class="audio-bars mb-3" style="height: 32px; justify-content: center;">
@@ -784,16 +452,6 @@
 </div>
 
 <script src="app.js"></script>
-<<<<<<< HEAD
 <script>renderShell('home');</script>
-=======
-<script>
-  renderShell('home');
-  window.addEventListener('load', () => {
-    const el = document.getElementById('stat-mentions');
-    if (el) animateCount(el, 2847, { duration: 900 });
-  });
-</script>
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
 </body>
 </html>

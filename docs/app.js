@@ -42,19 +42,12 @@ function babelLogoSVG(size = 32) {
 /* ---------- 3. Nav definitions ---------- */
 const NAV = [
   { id: 'home',          href: 'index.html',                     label: 'Launch',         icon: 'launch', section: 'Workspace' },
-<<<<<<< HEAD
   { id: 'intelligence',  href: 'intelligence.html',              label: 'Overview',       icon: 'brain' },
-=======
-  { id: 'intelligence',  href: 'intelligence.html',              label: 'Intelligence',   icon: 'brain' },
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
   { id: 'intel-social',  href: 'intelligence-social.html',       label: 'Social & News',  isChild: true, parentId: 'intelligence', count: '2,847' },
   { id: 'intel-llm',     href: 'intelligence-llm.html',          label: 'LLM Pulse',      isChild: true, parentId: 'intelligence', count: '247', countClass: 'new' },
   { id: 'intel-comp',    href: 'intelligence-competition.html',  label: 'Competition',    isChild: true, parentId: 'intelligence' },
   { id: 'actions',       href: 'actions.html',                   label: 'Action Center',  icon: 'bolt',   count: '12', countClass: 'urgent' },
-<<<<<<< HEAD
   { id: 'track',         href: 'track-record.html',              label: 'Track Record',   icon: 'trend',  count: '81%', countClass: 'success' },
-=======
->>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
   { id: 'brief',         href: 'brief.html',                     label: 'CEO Brief',      icon: 'brief',  section: 'Deliverables' },
 ];
 
