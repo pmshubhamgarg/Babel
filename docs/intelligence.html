@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
 <title>Babel — Overview</title>
 <link rel="stylesheet" href="styles.css">
 <style>
@@ -51,6 +52,29 @@
   }
   .ov-icon {
     width: 32px; height: 32px;
+=======
+<title>Babel — Intelligence Overview</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Section cards on overview */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .section-card-head {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-card-icon {
+    width: 26px; height: 26px;
+>>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     border-radius: var(--r-sm);
     display: inline-flex;
     align-items: center;
@@ -58,6 +82,7 @@
     color: white;
     flex-shrink: 0;
   }
+<<<<<<< HEAD
   .ov-icon svg { width: 16px; height: 16px; }
   .ov-icon.blue   { background: var(--bar-blue); }
   .ov-icon.purple { background: var(--bar-purple); }
@@ -185,6 +210,82 @@
   @media (max-width: 980px) {
     .ov-body { grid-template-columns: 1fr; }
   }
+=======
+  .section-card-icon.blue   { background: var(--bar-blue); }
+  .section-card-icon.purple { background: var(--bar-purple); }
+  .section-card-icon.yellow { background: var(--bar-yellow); color: #4A3500; }
+  .section-card-icon svg { width: 13px; height: 13px; }
+  .section-card-title { font-size: 13px; font-weight: 600; line-height: 1.2; }
+  .section-card-sub { font-size: 11px; color: var(--text-3); }
+
+  .section-card-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .section-headline {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--text-2);
+  }
+  .section-headline-dot {
+    width: 5px; height: 5px;
+    border-radius: var(--r-full);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .section-headline.pos .section-headline-dot { background: var(--success); }
+  .section-headline.neg .section-headline-dot { background: var(--danger); }
+  .section-headline.warn .section-headline-dot { background: var(--warning); }
+  .section-headline.info .section-headline-dot { background: var(--info); }
+  .section-headline strong { color: var(--text); font-weight: 600; }
+
+  .section-card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--line);
+  }
+  .section-card-stat-label { font-size: 9.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
+  .section-card-stat-val { font-size: 14px; font-weight: 600; letter-spacing: -0.015em; margin-top: 1px; }
+
+  .section-card-foot {
+    padding: 7px 12px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Critical alerts strip */
+  .alert-strip {
+    background: var(--danger-soft);
+    border: 1px solid #F2C9CC;
+    border-radius: var(--r-md);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .alert-strip-icon {
+    width: 22px; height: 22px;
+    border-radius: var(--r-full);
+    background: var(--danger);
+    color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    flex-shrink: 0;
+  }
+>>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
 </style>
 </head>
 <body>
@@ -194,9 +295,15 @@
   <!-- ===== HEADER ===== -->
   <header class="page-head">
     <div class="page-head-left">
+<<<<<<< HEAD
       <div class="eyebrow eyebrow-accent">Overview</div>
       <h1 class="h1">What you need to know about <em>Mamaearth</em> today.</h1>
       <p class="lead">Three streams synthesised, one page. Each section below: the number, the story behind it, and the one thing to do next.</p>
+=======
+      <div class="eyebrow eyebrow-accent">Intelligence · Overview</div>
+      <h1 class="h1">Every voice. Every channel. <em>One</em> view.</h1>
+      <p class="lead">Synthesised across social, news, every major LLM, and the competitive set — last refreshed 2 min ago.</p>
+>>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     </div>
     <div class="page-head-right">
       <select class="select">
@@ -215,16 +322,26 @@
     </div>
   </header>
 
+<<<<<<< HEAD
   <!-- ===== ALERT STRIP ===== -->
   <div class="alert-strip">
     <div class="alert-strip-icon">!</div>
     <div style="flex: 1;">
       <div class="alert-strip-title">4 critical signals need attention today.</div>
       <div class="alert-strip-sub">1 distress · 1 coordinated attack (47 accounts) · 1 LLM drift (Claude → Plum, 14d to lock-in) · 1 macro hedge needed</div>
+=======
+  <!-- ===== CRITICAL ALERTS STRIP ===== -->
+  <div class="alert-strip">
+    <div class="alert-strip-icon">!</div>
+    <div style="flex: 1;">
+      <div style="font-size: 13px; font-weight: 600; color: var(--text);">4 critical signals need attention today</div>
+      <div class="text-xs muted">1 distress · 1 coordinated attack (47 accounts) · 1 LLM drift (Claude → Plum) · 1 macro hedge needed</div>
+>>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     </div>
     <a href="actions.html" class="btn btn-danger btn-sm">Open Action Center →</a>
   </div>
 
+<<<<<<< HEAD
   <!-- ============================================================
        SECTION 1 · SOCIAL & NEWS
        ============================================================ -->
@@ -376,6 +493,205 @@
 
   <!-- ===== Continue ===== -->
   <div class="flex-between mt-4" style="padding-top: 12px; border-top: 1px solid var(--line);">
+=======
+  <!-- ===== THREE FULL-WIDTH DISTRIBUTION STRIPS ===== -->
+
+  <!-- Strip 1 · Social & News -->
+  <a href="intelligence-social.html" class="card card-padded card-link mb-3" style="display: block;">
+    <div class="card-header" style="margin-bottom: 10px;">
+      <div>
+        <div class="card-eyebrow">Social &amp; news sentiment</div>
+        <div class="card-title">2,847 mentions · 6 channels · India-native NLP, sarcasm-aware</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="badge badge-info badge-dot">Live</span>
+        <span class="text-info text-sm">Open →</span>
+      </div>
+    </div>
+    <div class="meter meter-xl">
+      <div class="meter-seg meter-pos" style="flex: 62;">62% Positive</div>
+      <div class="meter-seg meter-neu" style="flex: 24;">24% Neutral</div>
+      <div class="meter-seg meter-neg" style="flex: 14;">14% Negative</div>
+    </div>
+    <div class="grid grid-3 mt-3 text-sm" style="color: var(--text-3);">
+      <div><strong class="text-pos">1,765</strong> positive · led by SPF 50 praise</div>
+      <div><strong style="color: var(--text-2);">683</strong> neutral · product Qs &amp; mentions</div>
+      <div><strong class="text-neg">399</strong> negative · 47 coordinated</div>
+    </div>
+  </a>
+
+  <!-- Strip 2 · LLM Pulse -->
+  <a href="intelligence-llm.html" class="card card-padded card-link mb-3" style="display: block;">
+    <div class="card-header" style="margin-bottom: 10px;">
+      <div>
+        <div class="card-eyebrow">LLM response sentiment</div>
+        <div class="card-title">247 prompts × 5 models · how AI describes Mamaearth when it does</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="badge badge-info badge-dot">14 min ago</span>
+        <span class="text-info text-sm">Open →</span>
+      </div>
+    </div>
+    <div class="meter meter-xl">
+      <div class="meter-seg meter-pos" style="flex: 68;">68% Favorable</div>
+      <div class="meter-seg meter-neu" style="flex: 22;">22% Neutral</div>
+      <div class="meter-seg meter-neg" style="flex: 10;">10% Critical</div>
+    </div>
+    <div class="grid grid-3 mt-3 text-sm" style="color: var(--text-3);">
+      <div><strong class="text-pos">168</strong> favorable · "natural" · "D2C leader" · "baby-safe"</div>
+      <div><strong style="color: var(--text-2);">54</strong> neutral · comparison Qs &amp; factual</div>
+      <div><strong class="text-neg">25</strong> critical · "marketing-heavy" · ingredient doubt</div>
+    </div>
+  </a>
+
+  <!-- Strip 3 · Competition · Share of voice -->
+  <a href="intelligence-competition.html" class="card card-padded card-link mb-4" style="display: block;">
+    <div class="card-header" style="margin-bottom: 10px;">
+      <div>
+        <div class="card-eyebrow">Category share of voice</div>
+        <div class="card-title">6 brands · Mamaearth leads · Plum closing the gap (+18% WoW)</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="badge badge-info badge-dot">8 min ago</span>
+        <span class="text-info text-sm">Open →</span>
+      </div>
+    </div>
+    <div class="meter meter-xl">
+      <div class="meter-seg" style="flex: 28; background: var(--bar-pink);">Mamaearth&nbsp;<strong>28%</strong></div>
+      <div class="meter-seg" style="flex: 22; background: var(--bar-blue);">Plum&nbsp;<strong>22%</strong></div>
+      <div class="meter-seg" style="flex: 19; background: var(--danger);">Patanjali&nbsp;<strong>19%</strong></div>
+      <div class="meter-seg" style="flex: 16; background: var(--bar-purple);">Moms Co&nbsp;<strong>16%</strong></div>
+      <div class="meter-seg" style="flex: 10; background: var(--text-3);"><strong>10%</strong></div>
+      <div class="meter-seg" style="flex: 5; background: var(--bar-yellow); color: #4A3500;"><strong>5%</strong></div>
+    </div>
+    <div class="grid grid-3 mt-3 text-sm" style="color: var(--text-3);">
+      <div><strong class="text-pos">You</strong> ▲ 12% WoW · sentiment +71</div>
+      <div><strong style="color: var(--bar-blue);">Plum</strong> ▲ 18% WoW · "Pure Plant" launch · threat</div>
+      <div><strong class="text-neg">Patanjali</strong> ▼ 41% · category contagion live</div>
+    </div>
+  </a>
+
+  <!-- ===== 3 SECTION CARDS ===== -->
+  <div class="grid grid-3 mb-4">
+
+    <!-- Social & News -->
+    <a href="intelligence-social.html" class="section-card card-link">
+      <div class="section-card-head">
+        <span class="section-card-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-7-7M5 12a7 7 0 0 0 7 7"/></svg>
+        </span>
+        <div style="flex: 1;">
+          <div class="section-card-title">Social &amp; News</div>
+          <div class="section-card-sub">6 channels · 7 themes detected</div>
+        </div>
+      </div>
+      <div class="section-card-body">
+        <div class="section-headline neg">
+          <span class="section-headline-dot"></span>
+          <div><strong>Distress signal · @priya.s.mum</strong> — baby rash from body wash, hospitalised. Legal flagged.</div>
+        </div>
+        <div class="section-headline warn">
+          <span class="section-headline-dot"></span>
+          <div><strong>47 accounts</strong> coordinating #MamaearthLies. 92% similarity, &lt;30-day-old accounts. 180K reach.</div>
+        </div>
+        <div class="section-headline pos">
+          <span class="section-headline-dot"></span>
+          <div><strong>SPF 50</strong> breaking out — 412 mentions this week, +92% positive. 11 advocate creators identified.</div>
+        </div>
+      </div>
+      <div class="section-card-stats">
+        <div><div class="section-card-stat-label">Mentions</div><div class="section-card-stat-val">2,847</div></div>
+        <div><div class="section-card-stat-label">Sentiment</div><div class="section-card-stat-val text-pos">+71</div></div>
+        <div><div class="section-card-stat-label">Critical</div><div class="section-card-stat-val text-neg">3</div></div>
+      </div>
+      <div class="section-card-foot">
+        <span class="text-xs muted">Last refresh 2 min ago</span>
+        <span class="btn btn-ghost btn-sm">Open →</span>
+      </div>
+    </a>
+
+    <!-- LLM Pulse -->
+    <a href="intelligence-llm.html" class="section-card card-link">
+      <div class="section-card-head">
+        <span class="section-card-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3"/><path d="M12 5a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3"/><path d="M9 10H7a2 2 0 0 0 0 4h2"/><path d="M15 10h2a2 2 0 0 1 0 4h-2"/></svg>
+        </span>
+        <div style="flex: 1;">
+          <div class="section-card-title">LLM Pulse</div>
+          <div class="section-card-sub">247 prompts · 5 models</div>
+        </div>
+      </div>
+      <div class="section-card-body">
+        <div class="section-headline warn">
+          <span class="section-headline-dot"></span>
+          <div><strong>Claude drift</strong> — Plum overtook Mamaearth on "vegan baby shampoo India". <strong>~14 days</strong> until this becomes default.</div>
+        </div>
+        <div class="section-headline pos">
+          <span class="section-headline-dot"></span>
+          <div><strong>Perplexity sentiment</strong> surged to +78 (+11) on SPF 50 launch press citation footprint.</div>
+        </div>
+        <div class="section-headline info">
+          <span class="section-headline-dot"></span>
+          <div><strong>Top bad-sentiment query:</strong> "is Mamaearth actually natural" — 100% mention, +42 sentiment.</div>
+        </div>
+      </div>
+      <div class="section-card-stats">
+        <div><div class="section-card-stat-label">AI mention</div><div class="section-card-stat-val">34%</div></div>
+        <div><div class="section-card-stat-label">Avg rank</div><div class="section-card-stat-val">2.4</div></div>
+        <div><div class="section-card-stat-label">Drift alerts</div><div class="section-card-stat-val text-warn">1</div></div>
+      </div>
+      <div class="section-card-foot">
+        <span class="text-xs muted">Last probe 14 min ago</span>
+        <span class="btn btn-ghost btn-sm">Open →</span>
+      </div>
+    </a>
+
+    <!-- Competition -->
+    <a href="intelligence-competition.html" class="section-card card-link">
+      <div class="section-card-head">
+        <span class="section-card-icon yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-7 7 7v11M9 21v-6h6v6"/></svg>
+        </span>
+        <div style="flex: 1;">
+          <div class="section-card-title">Competition</div>
+          <div class="section-card-sub">6 brands · category contagion live</div>
+        </div>
+      </div>
+      <div class="section-card-body">
+        <div class="section-headline neg">
+          <span class="section-headline-dot"></span>
+          <div><strong>Patanjali crisis</strong> — sentiment crashed to −24. Category contagion: +12% skeptical mentions of all "natural" brands.</div>
+        </div>
+        <div class="section-headline warn">
+          <span class="section-headline-dot"></span>
+          <div><strong>Plum "Pure Plant"</strong> campaign gained +18% SoV in 3 days. Direct overlap with our positioning.</div>
+        </div>
+        <div class="section-headline info">
+          <span class="section-headline-dot"></span>
+          <div><strong>Palm oil</strong> +23% vs 6-mo avg · 3 SKUs exposed · procurement notified.</div>
+        </div>
+      </div>
+      <div class="section-card-stats">
+        <div><div class="section-card-stat-label">Your SoV</div><div class="section-card-stat-val">28%</div></div>
+        <div><div class="section-card-stat-label">Threat</div><div class="section-card-stat-val text-warn">Plum</div></div>
+        <div><div class="section-card-stat-label">Crisis</div><div class="section-card-stat-val text-neg">Patanjali</div></div>
+      </div>
+      <div class="section-card-foot">
+        <span class="text-xs muted">Last sync 8 min ago</span>
+        <span class="btn btn-ghost btn-sm">Open →</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ===== INSIGHT QUOTE ===== -->
+  <div class="quote">
+    "The new shelf is the LLM answer box. When a customer asks ChatGPT for 'the best toxin-free baby shampoo,' your brand is either on that list, or it isn't."
+    <span class="quote-attrib">Why we built LLM Pulse</span>
+  </div>
+
+  <!-- ===== Continue ===== -->
+  <div class="flex-between mt-6" style="padding-top: 16px; border-top: 1px solid var(--line);">
+>>>>>>> 69e49d743a48fb856e69a031b8c6db6ba4e419b5
     <span class="text-sm muted">23 actions queued · 4 marked critical</span>
     <a href="actions.html" class="btn btn-accent">
       Continue to Action Center
