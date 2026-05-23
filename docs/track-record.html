@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babel — Track Record</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ===== Track Record · AI accountability loop ===== */
+  .track-hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 0;
+    background: linear-gradient(135deg, #F1F9F4 0%, #EAF3FF 100%);
+    border: 1px solid #C7E5D8;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .track-hero > div { padding: 16px 20px; border-right: 1px solid rgba(38,142,108,0.18); }
+  .track-hero > div:last-child { border-right: none; }
+  .track-hero-rate {
+    background: linear-gradient(135deg, #E3F4ED 0%, #F1F9F4 100%);
+  }
+  .track-rate-num {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--success);
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .track-rate-sub {
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+  .track-rate-sub strong { color: var(--text); font-weight: 600; }
+  .track-stat-label { font-size: 10.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .track-stat-val { font-size: 24px; font-weight: 700; letter-spacing: -0.025em; margin-top: 6px; line-height: 1; }
+  .track-stat-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+  /* Filter chip row */
+  .track-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  .track-filters .label { font-size: 11px; color: var(--text-3); margin-right: 4px; }
+
+  /* Action card */
+  .track-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--success);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+  }
+  .track-card.miss     { border-left-color: var(--danger); }
+  .track-card.mixed    { border-left-color: var(--warning); }
+  .track-card.tracking { border-left-color: var(--primary); }
+
+  .track-verdict {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding-top: 2px;
+  }
+  .track-verdict-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--r-full);
+    background: var(--success-soft);
+    color: var(--success);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+  }
+  .track-card.miss .track-verdict-icon     { background: var(--danger-soft);  color: var(--danger); }
+  .track-card.mixed .track-verdict-icon    { background: var(--warning-soft); color: var(--warning); }
+  .track-card.tracking .track-verdict-icon { background: var(--primary-soft); color: var(--primary-2); }
+  .track-verdict-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--success);
+  }
+  .track-card.miss .track-verdict-label     { color: var(--danger); }
+  .track-card.mixed .track-verdict-label    { color: var(--warning); }
+  .track-card.tracking .track-verdict-label { color: var(--primary-2); }
+
+  .track-body { min-width: 0; }
+  .track-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .track-title { font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--text); }
+  .track-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .track-pred {
+    font-size: 12.5px;
+    color: var(--text-2);
+    line-height: 1.55;
+    padding: 9px 12px;
+    background: var(--bg-1);
+    border-left: 2px solid var(--text-4);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    margin-bottom: 10px;
+  }
+  .track-pred-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-right: 8px;
+  }
+  .track-outcome-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 5px;
+  }
+  .track-outcome-list { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+  .track-outcome-list li { list-style: none; padding-left: 14px; position: relative; }
+  .track-outcome-list li::before { content: '·'; position: absolute; left: 4px; color: var(--text-4); font-weight: 700; }
+  .track-outcome-list strong { color: var(--text); font-weight: 600; }
+
+  .track-foot {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .track-foot .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .track-foot .item strong { color: var(--text-2); font-weight: 600; }
+  .track-lesson {
+    font-size: 11.5px;
+    color: var(--text-2);
+    font-style: italic;
+    padding-left: 12px;
+    border-left: 2px solid var(--accent);
+    margin-left: auto;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 1080px) {
+    .track-hero { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="main-content"><main class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-head">
+    <div class="page-head-left">
+      <div class="eyebrow eyebrow-accent">Track Record · AI accountability</div>
+      <h1 class="h1">Babel keeps <em>score</em> on itself.</h1>
+      <p class="lead">Every recommendation graded against its predicted outcome. Hits, misses, and what's still tracking — including the calls we got wrong. That's the only way you can trust the next one.</p>
+    </div>
+    <div class="page-head-right">
+      <select class="select">
+        <option>Last 30 days</option>
+        <option>Last 7 days</option>
+        <option>Last 90 days</option>
+        <option>All time</option>
+      </select>
+      <button class="btn btn-secondary btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0l-4-4m4 4l4-4"/><path d="M4 18v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== HERO HIT-RATE STRIP ===== -->
+  <div class="track-hero">
+    <div class="track-hero-rate">
+      <div class="track-stat-label">Last 30 days · AI hit rate</div>
+      <div class="track-rate-num">81<span style="font-size: 26px; color: var(--text-3);">%</span></div>
+      <div class="track-rate-sub"><strong>47 of 58</strong> AI recommendations moved their target metric.</div>
+    </div>
+    <div>
+      <div class="track-stat-label">Value created (est.)</div>
+      <div class="track-stat-val text-pos">₹38L</div>
+      <div class="track-stat-sub">LTV recovered + amplified reach + crises avoided</div>
+    </div>
+    <div>
+      <div class="track-stat-label">Avoided losses (est.)</div>
+      <div class="track-stat-val text-info">₹14.2L</div>
+      <div class="track-stat-sub">Coordinated attacks · churn · failed launches</div>
+    </div>
+    <div>
+      <div class="track-stat-label">Hit-rate trend</div>
+      <svg width="100%" height="36" viewBox="0 0 100 32" preserveAspectRatio="none" style="margin-top: 6px;">
+        <path d="M0 22 L25 18 L50 14 L75 10 L100 10 L100 32 L0 32 Z" fill="rgba(38,142,108,0.15)"/>
+        <path d="M0 22 L25 18 L50 14 L75 10 L100 10" fill="none" stroke="#268E6C" stroke-width="1.5"/>
+      </svg>
+      <div class="track-stat-sub">72% → 76% → 79% → 81% (last 4 wks)</div>
+    </div>
+  </div>
+
+  <!-- ===== FILTER CHIPS ===== -->
+  <div class="track-filters">
+    <span class="label">Filter:</span>
+    <span class="chip active" data-track-filter="all">All <span class="text-xs muted">(58)</span></span>
+    <span class="chip" data-track-filter="hit">Hits <span class="text-xs muted">(47)</span></span>
+    <span class="chip" data-track-filter="tracking">Tracking <span class="text-xs muted">(5)</span></span>
+    <span class="chip" data-track-filter="mixed">Mixed <span class="text-xs muted">(4)</span></span>
+    <span class="chip" data-track-filter="miss">Misses <span class="text-xs muted">(2)</span></span>
+    <span style="flex:1"></span>
+    <span class="text-xs muted">Sorted by most recent</span>
+  </div>
+
+  <!-- ===== ACTION CARDS ===== -->
+  <div id="track-list">
+
+    <!-- HIT — Ananya Reddy reply -->
+    <article class="track-card" data-verdict="hit">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">✓</div>
+        <div class="track-verdict-label">Hit</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Reply to Ananya Reddy + amplify 11 similar creators</div>
+            <div class="track-meta">advocate amplification · dispatched 18 May 14:23 by Shubh</div>
+          </div>
+          <span class="badge badge-success">Hit ✓</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Warm reply + outreach to 11 similar SPF 50 creators will compound the advocate-driven sentiment lift within 48h."
+        </div>
+        <div class="track-outcome-title">48h outcome</div>
+        <ul class="track-outcome-list">
+          <li>Ananya replied <strong>"thank you 🙌"</strong> 6h after send</li>
+          <li>Her post engagement: 1.2K → <strong>1.7K likes (+42%)</strong></li>
+          <li><strong>6 of 11</strong> outreach creators posted within 36h</li>
+          <li>"SPF 50" theme sentiment: +78 → <strong>+80 (+2 pts)</strong></li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>~72%</strong></span>
+          <span class="item">Cost <strong>₹0</strong></span>
+          <span class="item">Reach <strong>~1.8M</strong></span>
+          <span class="track-lesson">Advocate amplification compounds faster than paid push — moved to default playbook.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- HIT — Bulk delivery delay -->
+    <article class="track-card" data-verdict="hit">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">✓</div>
+        <div class="track-verdict-label">Hit</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Bulk reply-all · 156 delivery-delay customers · Tier 2 cities</div>
+            <div class="track-meta">bulk personalised dispatch · 17 May 11:00 by Shubh · reviewed by Aanya</div>
+          </div>
+          <span class="badge badge-success">Hit ✓</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Personalised apology + tracking + ₹150 credit will recover ~₹3.8L in projected lost CLV and shift Twitter sentiment on 'Mamaearth delivery'."
+        </div>
+        <div class="track-outcome-title">72h outcome</div>
+        <ul class="track-outcome-list">
+          <li>Reply rate: <strong>89 of 156 customers (57%)</strong> — vs CX-team baseline of 31%</li>
+          <li>Of repliers, <strong>73% moved sentiment positive</strong></li>
+          <li><strong>12 customers</strong> placed a new order within 48h (vs control 4%)</li>
+          <li>"Mamaearth delivery" Twitter mentions: <strong>−34% week-over-week</strong></li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>~78%</strong></span>
+          <span class="item">Cost <strong>₹22,950</strong> credits</span>
+          <span class="item">Recovered LTV <strong>~₹3.2L</strong> (84% of projected)</span>
+          <span class="track-lesson">Tier-2 personalisation outperforms metro template — adding Tier-2 dialect cues to next wave.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- HIT — Coordinated attack response -->
+    <article class="track-card" data-verdict="hit">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">✓</div>
+        <div class="track-verdict-label">Hit</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Coordinated attack response · #MamaearthLies cluster (47 accounts)</div>
+            <div class="track-meta">orchestrated strategy · 14–17 May · led by Aanya · legal &amp; PR briefed</div>
+          </div>
+          <span class="badge badge-success">Hit ✓</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Don't engage individually. Transparency post + 5 advocate creators will reverse sentiment within 5 days without feeding the bots."
+        </div>
+        <div class="track-outcome-title">5-day outcome</div>
+        <ul class="track-outcome-list">
+          <li><strong>23 of 47</strong> attacker accounts platform-actioned (51%)</li>
+          <li>Transparency post reach: <strong>240K</strong> · sentiment <strong>+71</strong></li>
+          <li><strong>11 advocate creators</strong> posted unprompted (target was 5)</li>
+          <li>Brand sentiment trajectory: <strong>−2 → +71</strong> in 4 days</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>~68%</strong></span>
+          <span class="item">Cost <strong>₹0 paid amplification</strong></span>
+          <span class="track-lesson">"Don't feed bots" rule held. Adding similar-pattern detector to auto-flag earlier next time.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- HIT — SPF 50 micro-influencer -->
+    <article class="track-card" data-verdict="hit">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">✓</div>
+        <div class="track-verdict-label">Hit</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">SPF 50 micro-influencer push · 11 advocate creators</div>
+            <div class="track-meta">influencer programme · 13–16 May · brief sent by community team</div>
+          </div>
+          <span class="badge badge-success">Hit ✓</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Brief 11 specific advocates with sample + script — expect 6–8 to post, generating ~800K reach on the SPF 50 theme."
+        </div>
+        <div class="track-outcome-title">7-day outcome</div>
+        <ul class="track-outcome-list">
+          <li><strong>14 of 11</strong> posted (one creator tagged a friend who joined unprompted)</li>
+          <li>Aggregate reach: <strong>1.8M</strong> (vs 800K predicted — 225%)</li>
+          <li>"SPF 50" theme: +<strong>5 sentiment</strong>, +<strong>248 organic mentions</strong></li>
+          <li>"Indian skin" co-mention rate: <strong>+38%</strong> (long-term equity)</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>~84%</strong></span>
+          <span class="item">Cost <strong>₹0</strong> (sample seeding only)</span>
+          <span class="track-lesson">AI under-estimated reach — calibrating the advocate-network multiplier upward.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- TRACKING — Transparency series -->
+    <article class="track-card tracking" data-verdict="tracking">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">⊙</div>
+        <div class="track-verdict-label">Tracking</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Pre-emptive transparency content series (vs Patanjali contagion)</div>
+            <div class="track-meta">long-term campaign · launched 16 May · week 2 of estimated 6</div>
+          </div>
+          <span class="badge badge-info">Tracking · 32% of horizon</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "First-mover transparency play during category contagion will lift 'natural-claim' sentiment for Mamaearth specifically by +8 pts over 6 weeks."
+        </div>
+        <div class="track-outcome-title">Week 2 early signal</div>
+        <ul class="track-outcome-list">
+          <li>Episode 1 reach: <strong>89K</strong> · 6.2% engagement (above benchmark)</li>
+          <li>"Mamaearth transparency" mentions: <strong>+12 positive</strong> this week</li>
+          <li>Skeptical mentions on "natural" claim: <strong>flat</strong> (no spike yet — good)</li>
+          <li>Plum / Moms Co still haven't responded — first-mover window holding</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Horizon <strong>6 wks · week 2 of 6</strong></span>
+          <span class="item">Spend so far <strong>₹3.4L of ₹12L</strong></span>
+          <span class="track-lesson">Trajectory on-track. Full outcome verdict expected ~26 June.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- TRACKING — Vegan cert -->
+    <article class="track-card tracking" data-verdict="tracking">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">⊙</div>
+        <div class="track-verdict-label">Tracking</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Vegan certification press release accelerated to this quarter</div>
+            <div class="track-meta">PR programme · approved 17 May · awaiting legal sign-off</div>
+          </div>
+          <span class="badge badge-info">Tracking · week 1 of 4</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Accelerating vegan cert PR from Q3 to this quarter will recover Claude's #1 ranking on 'best vegan baby shampoo India' within 30 days."
+        </div>
+        <div class="track-outcome-title">Week 1 status</div>
+        <ul class="track-outcome-list">
+          <li>PR draft: complete · pending legal review (2 days)</li>
+          <li>Claude ranking unchanged so far (Plum still #1)</li>
+          <li>No measurable LLM-level outcome until press hits</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Horizon <strong>4 wks · week 1 of 4</strong></span>
+          <span class="item">Spend <strong>₹0 to date</strong></span>
+          <span class="track-lesson">Outcome verdict expected ~17 June.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- MIXED — Reddit engagement -->
+    <article class="track-card mixed" data-verdict="mixed">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">≈</div>
+        <div class="track-verdict-label">Mixed</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Reddit engagement · "natural claims" thread on r/IndianSkincare</div>
+            <div class="track-meta">public reply · 12 May 16:08 by Shubh</div>
+          </div>
+          <span class="badge badge-warning">Mixed ≈</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Transparent, public reply with BIS reference + lab cert link will move r/IndianSkincare sentiment on 'natural claims' positive within 7 days."
+        </div>
+        <div class="track-outcome-title">7-day outcome</div>
+        <ul class="track-outcome-list">
+          <li>Reply got <strong>47 upvotes</strong> (top comment) — initial positive</li>
+          <li>3 follow-up Qs we couldn't answer publicly (legal review)</li>
+          <li>Sentiment on subreddit: <strong>+6 → drifted back to +1</strong> over 5 days</li>
+          <li>Two redditors started a separate "is Mamaearth transparent?" thread</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>~58%</strong></span>
+          <span class="item">Cost <strong>₹0</strong></span>
+          <span class="track-lesson">Reddit needs a follow-up plan, not a one-shot reply. Now requires 3-touch playbook before engaging.</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- MISS — Plum counter-launch -->
+    <article class="track-card miss" data-verdict="miss">
+      <div class="track-verdict">
+        <div class="track-verdict-icon">✗</div>
+        <div class="track-verdict-label">Miss</div>
+      </div>
+      <div class="track-body">
+        <div class="track-head">
+          <div>
+            <div class="track-title">Counter-launch SPF 35 at lower price point (vs Plum)</div>
+            <div class="track-meta">strategic recommendation · 8 May · paused by procurement</div>
+          </div>
+          <span class="badge badge-danger">Miss ✗</span>
+        </div>
+        <div class="track-pred">
+          <span class="track-pred-label">AI predicted</span>
+          "Counter-launching SPF 35 at 30% lower price would recover 8 pts of share-of-voice from Plum within 6 weeks."
+        </div>
+        <div class="track-outcome-title">Outcome</div>
+        <ul class="track-outcome-list">
+          <li>Procurement paused execution — <strong>conflicts with premium positioning guardrail</strong></li>
+          <li>No counter-launch shipped · no measurable SoV change</li>
+          <li>Internal review flagged the recommendation as off-brand</li>
+        </ul>
+        <div class="track-foot">
+          <span class="item">Causality confidence <strong>N/A</strong></span>
+          <span class="item">Cost <strong>₹0</strong> (paused before spend)</span>
+          <span class="track-lesson">AI didn't model the brand-book positioning rule. Now feeds positioning guardrails into the prompt context — won't repeat.</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="flex-between mt-4" style="padding-top: 14px; border-top: 1px solid var(--line);">
+    <span class="text-xs muted">Showing 8 of 58 actions</span>
+    <button class="btn btn-ghost btn-sm">Load 50 more →</button>
+  </div>
+
+</main></div>
+
+<script src="app.js"></script>
+<script>
+  renderShell('track');
+
+  // Filter chips
+  document.querySelectorAll('[data-track-filter]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('[data-track-filter]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const f = chip.dataset.trackFilter;
+      document.querySelectorAll('#track-list .track-card').forEach(card => {
+        card.style.display = (f === 'all' || card.dataset.verdict === f) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>

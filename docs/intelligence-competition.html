@@ -13,7 +13,7 @@
     font-size: 12.5px;
   }
   .comp-matrix > div {
-    padding: 10px 12px;
+    padding: 12px 14px;
     border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
@@ -44,7 +44,7 @@
   <!-- ===== HEADER ===== -->
   <header class="page-head">
     <div class="page-head-left">
-      <div class="eyebrow eyebrow-accent">Intelligence · Competition</div>
+      <div class="eyebrow eyebrow-accent">Overview · Competition</div>
       <h1 class="h1">The <em>category</em> view.</h1>
       <p class="lead">Six brands. One category. When a competitor falls, the whole category often falls with them.</p>
     </div>
@@ -56,6 +56,100 @@
       <button class="btn btn-secondary btn-sm">Export</button>
     </div>
   </header>
+
+  <!-- ===== AI AUTO-INSIGHT BANNER ===== -->
+  <div class="ai-banner">
+    <div class="ai-banner-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z"/><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"/></svg>
+    </div>
+    <div class="ai-banner-body">
+      <div class="ai-banner-label">Auto-detected insight <span class="sep">·</span> <span class="freshness">last sync 8 min ago</span></div>
+      <div class="ai-banner-text">
+        You hold <strong>#1 by share of voice (28%)</strong> — but Plum's "Pure Plant" campaign grew their SoV by <strong>+18% in 3 days</strong>, directly overlapping your natural-vegan positioning. <strong>Patanjali's crisis is contagious</strong> — skepticism on "natural" claims is rising across the entire category. Babel projects Plum overtakes you in ~6 weeks if unaddressed.
+      </div>
+    </div>
+    <div class="ai-banner-cta">
+      <a href="actions.html" class="btn btn-primary btn-sm">See response plan →</a>
+    </div>
+  </div>
+
+  <!-- ===== HERO CHART · Share of Voice over time ===== -->
+  <div class="hero-chart">
+    <div class="hero-chart-head">
+      <div>
+        <div class="panel-title">Share of voice trajectory · last 30 days</div>
+        <div class="panel-sub">All 6 category brands · daily aggregate · annotations for campaign launches</div>
+      </div>
+      <div class="hero-chart-stats">
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val text-accent">28%</div>
+          <div class="hero-chart-stat-lbl">you</div>
+        </div>
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val text-info">22%</div>
+          <div class="hero-chart-stat-lbl">Plum (▲ 18%)</div>
+        </div>
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val text-neg">19%</div>
+          <div class="hero-chart-stat-lbl">Patanjali (▼ 41%)</div>
+        </div>
+      </div>
+    </div>
+
+    <svg class="hero-chart-svg hero-sentiment-svg" viewBox="0 0 700 140" preserveAspectRatio="none" style="height: 150px;" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      <line x1="0" y1="20"  x2="700" y2="20"  stroke="#EFEFEF" stroke-width="1"/>
+      <line x1="0" y1="60"  x2="700" y2="60"  stroke="#EFEFEF" stroke-width="1"/>
+      <line x1="0" y1="100" x2="700" y2="100" stroke="#EFEFEF" stroke-width="1"/>
+      <text x="2" y="24"  font-size="9" fill="#9A9AA2">30%</text>
+      <text x="2" y="64"  font-size="9" fill="#9A9AA2">20%</text>
+      <text x="2" y="104" font-size="9" fill="#9A9AA2">10%</text>
+
+      <!-- Mamaearth line (pink, top) -->
+      <path d="M30,40 L130,38 L230,36 L330,34 L430,32 L530,30 L630,28" fill="none" stroke="#D7457E" stroke-width="2.2"/>
+      <circle cx="630" cy="28" r="4" fill="#D7457E" stroke="white" stroke-width="2"/>
+      <text x="640" y="32" font-size="10" fill="#D7457E" font-weight="700">Mamaearth 28%</text>
+
+      <!-- Plum line (blue, rising fast) -->
+      <path d="M30,72 L130,70 L230,68 L330,66 L430,52 L530,46 L630,44" fill="none" stroke="#5B8DEF" stroke-width="2"/>
+      <circle cx="630" cy="44" r="4" fill="#5B8DEF" stroke="white" stroke-width="2"/>
+      <text x="640" y="48" font-size="10" fill="#5B8DEF" font-weight="700">Plum 22%</text>
+
+      <!-- Patanjali line (red, dropping fast) -->
+      <path d="M30,30 L130,32 L230,42 L330,58 L430,68 L530,52 L630,56" fill="none" stroke="#D7373F" stroke-width="2"/>
+      <circle cx="630" cy="56" r="4" fill="#D7373F" stroke="white" stroke-width="2"/>
+      <text x="640" y="60" font-size="10" fill="#D7373F" font-weight="700">Patanjali 19%</text>
+
+      <!-- Moms Co (purple) -->
+      <path d="M30,84 L130,82 L230,80 L330,76 L430,74 L530,72 L630,70" fill="none" stroke="#A77BC4" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="630" cy="70" r="3" fill="#A77BC4" stroke="white" stroke-width="1"/>
+      <text x="640" y="74" font-size="9.5" fill="#A77BC4">Moms Co 16%</text>
+
+      <!-- Biotique (grey) -->
+      <path d="M30,96 L130,94 L230,92 L330,90 L430,88 L530,90 L630,88" fill="none" stroke="#9A9AA2" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="630" cy="88" r="3" fill="#9A9AA2" stroke="white" stroke-width="1"/>
+      <text x="640" y="92" font-size="9.5" fill="#9A9AA2">Biotique 10%</text>
+
+      <!-- Forest (yellow) -->
+      <path d="M30,110 L130,109 L230,108 L330,107 L430,107 L530,106 L630,106" fill="none" stroke="#F5B842" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="630" cy="106" r="3" fill="#F5B842" stroke="white" stroke-width="1"/>
+      <text x="640" y="110" font-size="9.5" fill="#B86E00">Forest 5%</text>
+
+      <!-- Annotation: Plum "Pure Plant" launch -->
+      <line x1="430" y1="0" x2="430" y2="120" stroke="#5B8DEF" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+      <text x="370" y="12" font-size="10" fill="#5B8DEF" font-weight="600">Plum "Pure Plant"</text>
+
+      <!-- Annotation: Patanjali scandal -->
+      <line x1="330" y1="0" x2="330" y2="120" stroke="#D7373F" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+      <text x="270" y="12" font-size="10" fill="#D7373F" font-weight="600">Patanjali scandal</text>
+
+      <!-- X-axis -->
+      <text x="30"  y="135" font-size="9.5" fill="#9A9AA2">−30d</text>
+      <text x="230" y="135" font-size="9.5" fill="#9A9AA2">−20d</text>
+      <text x="430" y="135" font-size="9.5" fill="#9A9AA2">−10d</text>
+      <text x="613" y="135" font-size="9.5" fill="#9A9AA2" font-weight="600">Today</text>
+    </svg>
+  </div>
 
   <!-- ===== COMPETITOR MATRIX ===== -->
   <div class="card card-padded mb-4">
@@ -247,12 +341,37 @@
     </div>
   </div>
 
-  <!-- ===== Continue ===== -->
-  <div class="flex-between mt-6" style="padding-top: 16px; border-top: 1px solid var(--line);">
+  <!-- ===== AI INSIGHTS ROW ===== -->
+  <div class="ai-insights-row">
+    <div class="ai-insight risk">
+      <div class="ai-insight-label">📊 Velocity projection</div>
+      <div class="ai-insight-text">
+        Plum gained <strong>+4 SoV pts/week</strong> consistently for 3 weeks. At this pace, they overtake Mamaearth as category leader in <strong>~6 weeks</strong> if unchecked.
+      </div>
+    </div>
+    <div class="ai-insight pattern">
+      <div class="ai-insight-label">🌊 Contagion forecast</div>
+      <div class="ai-insight-text">
+        Patanjali crisis is in <strong>week 3</strong>. Historical pattern shows category contagion peaks at week 5 — your window to act with transparency is <strong>~14 days</strong>.
+      </div>
+    </div>
+    <div class="ai-insight correlation">
+      <div class="ai-insight-label">🔮 Adjacent threat</div>
+      <div class="ai-insight-text">
+        Forest's <strong>15% Tier-1 price drop</strong> won't impact you directly today, but signals premium-segment softness — your top-SKU pricing may face pressure within 90 days.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACTION FOOTER ===== -->
+  <div class="action-footer">
+    <div class="action-footer-body">
+      <div class="action-footer-title">3 competitor moves + 2 macro signals require coordinated response.</div>
+      <div class="action-footer-sub">Pre-emptive transparency series · Plum-counter narrative · palm-oil hedge brief · DPDP audit.</div>
+    </div>
     <a href="intelligence-llm.html" class="btn btn-ghost btn-sm">← LLM Pulse</a>
-    <a href="actions.html" class="btn btn-accent btn-sm">
-      Continue to Action Center
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    <a href="actions.html" class="btn btn-primary btn-sm">
+      Open Action Center →
     </a>
   </div>
 

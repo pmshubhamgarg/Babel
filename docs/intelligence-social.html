@@ -16,10 +16,10 @@
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--r-md);
-    padding: 10px 12px;
+    padding: 13px 15px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
   .platform-head {
     display: flex;
@@ -65,6 +65,18 @@
   .platform-themes .row .label { color: var(--text-3); width: 32px; }
   .platform-themes .row .text { color: var(--text-2); flex: 1; }
 
+  /* Hero chart specifics */
+  .hero-sentiment-svg { height: 130px; }
+  .hero-chart-stats {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .hero-chart-stat { display: flex; flex-direction: column; }
+  .hero-chart-stat-val { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .hero-chart-stat-lbl { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+
   @media (max-width: 980px) {
     .platform-grid { grid-template-columns: 1fr 1fr; }
   }
@@ -80,9 +92,9 @@
   <!-- ===== HEADER ===== -->
   <header class="page-head">
     <div class="page-head-left">
-      <div class="eyebrow eyebrow-accent">Intelligence · Social &amp; News</div>
+      <div class="eyebrow eyebrow-accent">Overview · Social &amp; News</div>
       <h1 class="h1">What the world is saying about <em>Mamaearth</em></h1>
-      <p class="lead">2,847 conversations across 6 channels, 7 themes detected, 1 coordinated pattern flagged.</p>
+      <p class="lead">2,847 conversations across 6 channels, last refreshed 2 min ago.</p>
     </div>
     <div class="page-head-right">
       <select class="select">
@@ -93,14 +105,101 @@
     </div>
   </header>
 
-  <!-- ===== SENTIMENT DISTRIBUTION ===== -->
-  <div class="card card-padded mb-4">
-    <div class="card-header">
-      <div>
-        <div class="card-eyebrow">Sentiment distribution</div>
-        <div class="card-title">All 2,847 mentions · India-native NLP, sarcasm-aware</div>
+  <!-- ===== AI AUTO-INSIGHT BANNER ===== -->
+  <div class="ai-banner">
+    <div class="ai-banner-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z"/><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14z"/></svg>
+    </div>
+    <div class="ai-banner-body">
+      <div class="ai-banner-label">Auto-detected insight <span class="sep">·</span> <span class="freshness">refreshed 2 min ago</span></div>
+      <div class="ai-banner-text">
+        Brand pulse is <strong>HEALTHY</strong> — sentiment at <strong>+71</strong> (▲ 3 pts), driven by SPF 50 advocacy (412 mentions, +92% positive). <strong>2 patterns need action today:</strong> a 47-account coordinated attack (180K reach, &lt;30-day accounts) and one distress signal from @priya.s.mum that needs senior CX response.
       </div>
-      <span class="badge badge-info badge-dot">Live</span>
+    </div>
+    <div class="ai-banner-cta">
+      <a href="actions.html" class="btn btn-primary btn-sm">Open Action Center →</a>
+    </div>
+  </div>
+
+  <!-- ===== HERO CHART · Sentiment over time ===== -->
+  <div class="hero-chart">
+    <div class="hero-chart-head">
+      <div>
+        <div class="panel-title">Brand sentiment · last 7 days</div>
+        <div class="panel-sub">Daily aggregate score · annotations for key events</div>
+      </div>
+      <div class="hero-chart-stats">
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val text-pos">+71</div>
+          <div class="hero-chart-stat-lbl">today</div>
+        </div>
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val">+68</div>
+          <div class="hero-chart-stat-lbl">7d avg</div>
+        </div>
+        <div class="hero-chart-stat">
+          <div class="hero-chart-stat-val text-pos">▲ 3</div>
+          <div class="hero-chart-stat-lbl">WoW</div>
+        </div>
+      </div>
+    </div>
+
+    <svg class="hero-chart-svg hero-sentiment-svg" viewBox="0 0 700 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      <line x1="0" y1="32"  x2="700" y2="32"  stroke="#EFEFEF" stroke-width="1"/>
+      <line x1="0" y1="65"  x2="700" y2="65"  stroke="#EFEFEF" stroke-width="1"/>
+      <line x1="0" y1="98"  x2="700" y2="98"  stroke="#EFEFEF" stroke-width="1"/>
+      <!-- Y labels -->
+      <text x="2" y="36"  font-size="9" fill="#9A9AA2">+80</text>
+      <text x="2" y="69"  font-size="9" fill="#9A9AA2">+60</text>
+      <text x="2" y="102" font-size="9" fill="#9A9AA2">+40</text>
+
+      <!-- Positive sentiment area -->
+      <path d="M30,72 L130,68 L230,60 L330,52 L430,58 L530,48 L630,40 L630,130 L30,130 Z" fill="rgba(38,142,108,0.10)"/>
+      <!-- Positive sentiment line -->
+      <path d="M30,72 L130,68 L230,60 L330,52 L430,58 L530,48 L630,40" fill="none" stroke="#268E6C" stroke-width="2"/>
+
+      <!-- Critical event annotation marker -->
+      <line x1="330" y1="0" x2="330" y2="115" stroke="#D7373F" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+      <circle cx="330" cy="52" r="4" fill="#D7373F"/>
+      <text x="334" y="14" font-size="10" fill="#D7373F" font-weight="600">SPF 50 launch</text>
+
+      <line x1="530" y1="0" x2="530" y2="115" stroke="#B86E00" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+      <circle cx="530" cy="48" r="4" fill="#B86E00"/>
+      <text x="534" y="14" font-size="10" fill="#B86E00" font-weight="600">#MamaearthLies attack</text>
+
+      <!-- Today marker -->
+      <circle cx="630" cy="40" r="5" fill="#268E6C" stroke="white" stroke-width="2"/>
+      <text x="610" y="28" font-size="10" fill="#268E6C" font-weight="700">+71</text>
+
+      <!-- X-axis labels -->
+      <text x="30"  y="125" font-size="9.5" fill="#9A9AA2">Mon</text>
+      <text x="130" y="125" font-size="9.5" fill="#9A9AA2">Tue</text>
+      <text x="230" y="125" font-size="9.5" fill="#9A9AA2">Wed</text>
+      <text x="330" y="125" font-size="9.5" fill="#9A9AA2">Thu</text>
+      <text x="430" y="125" font-size="9.5" fill="#9A9AA2">Fri</text>
+      <text x="530" y="125" font-size="9.5" fill="#9A9AA2">Sat</text>
+      <text x="613" y="125" font-size="9.5" fill="#9A9AA2" font-weight="600">Today</text>
+    </svg>
+
+    <div class="hero-chart-legend">
+      <span class="item"><span class="dot" style="background: #268E6C;"></span> Sentiment score</span>
+      <span class="item"><span class="dot" style="background: #D7373F;"></span> Positive event annotation</span>
+      <span class="item"><span class="dot" style="background: #B86E00;"></span> Risk event annotation</span>
+    </div>
+  </div>
+
+  <!-- ===== SENTIMENT DISTRIBUTION + PLATFORM ===== -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Sentiment distribution</div>
+        <div class="panel-sub">2,847 mentions · India-native NLP, sarcasm-aware</div>
+      </div>
+      <div class="panel-actions">
+        <span class="panel-freshness">14 min ago</span>
+        <button class="btn btn-ghost btn-sm">⋯</button>
+      </div>
     </div>
     <div class="meter meter-xl">
       <div class="meter-seg meter-pos" style="flex: 62;">62% Positive</div>
@@ -114,202 +213,210 @@
     </div>
   </div>
 
-  <!-- ===== PER-PLATFORM SENTIMENT ===== -->
-  <div class="flex-between mb-3">
-    <div>
-      <div class="card-eyebrow">Sentiment by platform</div>
-      <div class="card-title mt-1">Six channels, six different conversations</div>
+  <!-- ===== SENTIMENT BY PLATFORM ===== -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Sentiment by platform</div>
+        <div class="panel-sub">Six channels · six different conversations</div>
+      </div>
+      <div class="panel-actions">
+        <span class="panel-freshness">14 min ago</span>
+        <button class="btn btn-ghost btn-sm">Expand →</button>
+      </div>
     </div>
-    <div class="text-xs muted">Hover any card for theme detail</div>
+
+    <div class="platform-grid">
+      <!-- Instagram -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-ig">IG</span>
+          <span class="platform-name">Instagram</span>
+          <span class="platform-mentions">968</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val pos">+78</span>
+          <span class="platform-score-delta text-pos">▲ 5</span>
+          <span class="text-xs muted" style="margin-left: auto;">strong</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 74;"></div>
+          <div class="meter-seg meter-neu" style="flex: 18;"></div>
+          <div class="meter-seg meter-neg" style="flex: 8;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 advocates · 248 posts</span></div>
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Distress: baby rash (1 viral)</span></div>
+        </div>
+      </div>
+
+      <!-- X / Twitter -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-x">𝕏</span>
+          <span class="platform-name">X / Twitter</span>
+          <span class="platform-mentions">740</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val neu">+22</span>
+          <span class="platform-score-delta text-neg">▼ 18</span>
+          <span class="text-xs muted" style="margin-left: auto;">attack ongoing</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 38;"></div>
+          <div class="meter-seg meter-neu" style="flex: 32;"></div>
+          <div class="meter-seg meter-neg" style="flex: 30;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">#MamaearthLies (47 paid accts)</span></div>
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">D2C leadership commentary</span></div>
+        </div>
+      </div>
+
+      <!-- Reddit -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-reddit">R</span>
+          <span class="platform-name">Reddit</span>
+          <span class="platform-mentions">312</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val neu">+34</span>
+          <span class="platform-score-delta flat">flat</span>
+          <span class="text-xs muted" style="margin-left: auto;">high-trust</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 48;"></div>
+          <div class="meter-seg meter-neu" style="flex: 36;"></div>
+          <div class="meter-seg meter-neg" style="flex: 16;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">"Is natural marketing real?"</span></div>
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">Onion oil HG · r/IndianSkincare</span></div>
+        </div>
+      </div>
+
+      <!-- YouTube -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-yt">▶</span>
+          <span class="platform-name">YouTube</span>
+          <span class="platform-mentions">198</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val pos">+62</span>
+          <span class="platform-score-delta up">▲ 3</span>
+          <span class="text-xs muted" style="margin-left: auto;">reviewer-led</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 64;"></div>
+          <div class="meter-seg meter-neu" style="flex: 26;"></div>
+          <div class="meter-seg meter-neg" style="flex: 10;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 review videos · 11 creators</span></div>
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Niacinamide % clarification needed</span></div>
+        </div>
+      </div>
+
+      <!-- Amazon -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-amazon">a</span>
+          <span class="platform-name">Amazon reviews</span>
+          <span class="platform-mentions">512</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val pos">+58</span>
+          <span class="platform-score-delta down">▼ 4</span>
+          <span class="text-xs muted" style="margin-left: auto;">conversion-critical</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 58;"></div>
+          <div class="meter-seg meter-neu" style="flex: 28;"></div>
+          <div class="meter-seg meter-neg" style="flex: 14;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Batch 2024B scent change (12 reviews)</span></div>
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">Onion oil repeat-purchase praise</span></div>
+        </div>
+      </div>
+
+      <!-- News & Blogs -->
+      <div class="platform-card">
+        <div class="platform-head">
+          <span class="src-icon src-icon-news">N</span>
+          <span class="platform-name">News &amp; blogs</span>
+          <span class="platform-mentions">117</span>
+        </div>
+        <div class="platform-score">
+          <span class="platform-score-val pos">+70</span>
+          <span class="platform-score-delta up">▲ 8</span>
+          <span class="text-xs muted" style="margin-left: auto;">earned media</span>
+        </div>
+        <div class="platform-meter">
+          <div class="meter-seg meter-pos" style="flex: 70;"></div>
+          <div class="meter-seg meter-neu" style="flex: 24;"></div>
+          <div class="meter-seg meter-neg" style="flex: 6;"></div>
+        </div>
+        <div class="platform-themes">
+          <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 launch press · 9 outlets</span></div>
+          <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Q3 stock pressure mentions (3)</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="platform-grid mb-4">
-
-    <!-- Instagram -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-ig">IG</span>
-        <span class="platform-name">Instagram</span>
-        <span class="platform-mentions">968</span>
+  <!-- ===== THEMES + MENTIONS FEED ===== -->
+  <div class="grid grid-2 mb-3">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Top emerging themes</div>
+          <div class="panel-sub">7 themes detected · ranked by velocity</div>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-ghost btn-sm">See all 7 →</button>
+        </div>
       </div>
-      <div class="platform-score">
-        <span class="platform-score-val pos">+78</span>
-        <span class="platform-score-delta text-pos">▲ 5</span>
-        <span class="text-xs muted" style="margin-left: auto;">strong</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 74;"></div>
-        <div class="meter-seg meter-neu" style="flex: 18;"></div>
-        <div class="meter-seg meter-neg" style="flex: 8;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 advocates · 248 posts</span></div>
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Distress: baby rash (1 viral)</span></div>
-      </div>
-    </div>
-
-    <!-- X / Twitter -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-x">𝕏</span>
-        <span class="platform-name">X / Twitter</span>
-        <span class="platform-mentions">740</span>
-      </div>
-      <div class="platform-score">
-        <span class="platform-score-val neu">+22</span>
-        <span class="platform-score-delta text-neg">▼ 18</span>
-        <span class="text-xs muted" style="margin-left: auto;">attack ongoing</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 38;"></div>
-        <div class="meter-seg meter-neu" style="flex: 32;"></div>
-        <div class="meter-seg meter-neg" style="flex: 30;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">#MamaearthLies (47 paid accts)</span></div>
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">D2C leadership commentary</span></div>
-      </div>
-    </div>
-
-    <!-- Reddit -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-reddit">R</span>
-        <span class="platform-name">Reddit</span>
-        <span class="platform-mentions">312</span>
-      </div>
-      <div class="platform-score">
-        <span class="platform-score-val neu">+34</span>
-        <span class="platform-score-delta flat">flat</span>
-        <span class="text-xs muted" style="margin-left: auto;">high-trust</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 48;"></div>
-        <div class="meter-seg meter-neu" style="flex: 36;"></div>
-        <div class="meter-seg meter-neg" style="flex: 16;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">"Is natural marketing real?"</span></div>
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">Onion oil HG · r/IndianSkincare</span></div>
-      </div>
-    </div>
-
-    <!-- YouTube -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-yt">▶</span>
-        <span class="platform-name">YouTube</span>
-        <span class="platform-mentions">198</span>
-      </div>
-      <div class="platform-score">
-        <span class="platform-score-val pos">+62</span>
-        <span class="platform-score-delta up">▲ 3</span>
-        <span class="text-xs muted" style="margin-left: auto;">reviewer-led</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 64;"></div>
-        <div class="meter-seg meter-neu" style="flex: 26;"></div>
-        <div class="meter-seg meter-neg" style="flex: 10;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 review videos · 11 creators</span></div>
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Niacinamide % clarification needed</span></div>
-      </div>
-    </div>
-
-    <!-- Amazon -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-amazon">a</span>
-        <span class="platform-name">Amazon reviews</span>
-        <span class="platform-mentions">512</span>
-      </div>
-      <div class="platform-score">
-        <span class="platform-score-val pos">+58</span>
-        <span class="platform-score-delta down">▼ 4</span>
-        <span class="text-xs muted" style="margin-left: auto;">conversion-critical</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 58;"></div>
-        <div class="meter-seg meter-neu" style="flex: 28;"></div>
-        <div class="meter-seg meter-neg" style="flex: 14;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Batch 2024B scent change (12 reviews)</span></div>
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">Onion oil repeat-purchase praise</span></div>
-      </div>
-    </div>
-
-    <!-- News & Blogs -->
-    <div class="platform-card">
-      <div class="platform-head">
-        <span class="src-icon src-icon-news">N</span>
-        <span class="platform-name">News &amp; blogs</span>
-        <span class="platform-mentions">117</span>
-      </div>
-      <div class="platform-score">
-        <span class="platform-score-val pos">+70</span>
-        <span class="platform-score-delta up">▲ 8</span>
-        <span class="text-xs muted" style="margin-left: auto;">earned media</span>
-      </div>
-      <div class="platform-meter">
-        <div class="meter-seg meter-pos" style="flex: 70;"></div>
-        <div class="meter-seg meter-neu" style="flex: 24;"></div>
-        <div class="meter-seg meter-neg" style="flex: 6;"></div>
-      </div>
-      <div class="platform-themes">
-        <div class="row"><span class="dot pos"></span><span class="label">TOP</span><span class="text">SPF 50 launch press · 9 outlets</span></div>
-        <div class="row"><span class="dot neg"></span><span class="label">BAD</span><span class="text">Q3 stock pressure mentions (3)</span></div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ===== Themes + Mentions feed ===== -->
-  <div class="grid grid-2 mb-4">
-
-    <!-- Themes -->
-    <div>
-      <div class="flex-between mb-2">
-        <div class="card-eyebrow">Top emerging themes</div>
-        <button class="btn btn-ghost btn-sm">See all 7 →</button>
-      </div>
-      <div class="card" style="padding: var(--s-3);">
-        <div class="bars-h">
-          <div class="bars-h-row">
-            <div class="bars-h-label">SPF 50 sunscreen praise<br><span class="text-xs muted">+92% positive</span></div>
-            <div class="bars-h-track"><div class="bars-h-fill" style="width:92%; background: var(--success);"></div></div>
-            <div class="bars-h-value">412</div>
-          </div>
-          <div class="bars-h-row">
-            <div class="bars-h-label">Onion hair oil repeat<br><span class="text-xs muted">+84% positive</span></div>
-            <div class="bars-h-track"><div class="bars-h-fill" style="width:84%; background: var(--success);"></div></div>
-            <div class="bars-h-value">287</div>
-          </div>
-          <div class="bars-h-row">
-            <div class="bars-h-label">Delivery delays · Tier 2<br><span class="text-xs muted">rising fast</span></div>
-            <div class="bars-h-track"><div class="bars-h-fill yellow" style="width:56%"></div></div>
-            <div class="bars-h-value">156</div>
-          </div>
-          <div class="bars-h-row">
-            <div class="bars-h-label">Vegan claim transparency<br><span class="text-xs muted">watch</span></div>
-            <div class="bars-h-track"><div class="bars-h-fill yellow" style="width:38%"></div></div>
-            <div class="bars-h-value">89</div>
-          </div>
-          <div class="bars-h-row">
-            <div class="bars-h-label">#MamaearthLies pattern<br><span class="text-xs muted text-neg">coordinated · paid</span></div>
-            <div class="bars-h-track"><div class="bars-h-fill danger" style="width:100%"></div></div>
-            <div class="bars-h-value">47</div>
-          </div>
+      <div class="bars-h">
+        <div class="bars-h-row">
+          <div class="bars-h-label">SPF 50 sunscreen praise<br><span class="text-xs muted">+92% positive</span></div>
+          <div class="bars-h-track"><div class="bars-h-fill" style="width:92%; background: var(--success);"></div></div>
+          <div class="bars-h-value">412</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Onion hair oil repeat<br><span class="text-xs muted">+84% positive</span></div>
+          <div class="bars-h-track"><div class="bars-h-fill" style="width:84%; background: var(--success);"></div></div>
+          <div class="bars-h-value">287</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Delivery delays · Tier 2<br><span class="text-xs muted">rising fast</span></div>
+          <div class="bars-h-track"><div class="bars-h-fill yellow" style="width:56%"></div></div>
+          <div class="bars-h-value">156</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">Vegan claim transparency<br><span class="text-xs muted">watch</span></div>
+          <div class="bars-h-track"><div class="bars-h-fill yellow" style="width:38%"></div></div>
+          <div class="bars-h-value">89</div>
+        </div>
+        <div class="bars-h-row">
+          <div class="bars-h-label">#MamaearthLies pattern<br><span class="text-xs muted text-neg">coordinated · paid</span></div>
+          <div class="bars-h-track"><div class="bars-h-fill danger" style="width:100%"></div></div>
+          <div class="bars-h-value">47</div>
         </div>
       </div>
     </div>
 
-    <!-- Mentions feed -->
-    <div>
-      <div class="flex-between mb-2">
-        <div class="card-eyebrow">Mentions needing attention</div>
-        <a href="actions.html" class="btn btn-ghost btn-sm">Open in Action Center →</a>
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Mentions needing attention</div>
+          <div class="panel-sub">Sorted by urgency · 4 critical today</div>
+        </div>
+        <div class="panel-actions">
+          <a href="actions.html" class="btn btn-ghost btn-sm">Open in Action Center →</a>
+        </div>
       </div>
 
       <div class="mention mention-crit">
@@ -350,10 +457,36 @@
     </div>
   </div>
 
-  <!-- ===== Continue ===== -->
-  <div class="flex-between mt-6" style="padding-top: 16px; border-top: 1px solid var(--line);">
-    <a href="intelligence.html" class="btn btn-ghost btn-sm">← Back to overview</a>
-    <a href="intelligence-llm.html" class="btn btn-primary btn-sm">Continue to LLM Pulse →</a>
+  <!-- ===== AI INSIGHTS ROW ===== -->
+  <div class="ai-insights-row">
+    <div class="ai-insight correlation">
+      <div class="ai-insight-label">🔍 Correlation</div>
+      <div class="ai-insight-text">
+        The <strong>SPF 50 sentiment lift</strong> tracks Ananya Reddy's 18 May post with <strong>92% correlation</strong>. Single creator drove ~34% of the week's positive volume.
+      </div>
+    </div>
+    <div class="ai-insight pattern">
+      <div class="ai-insight-label">⚠ Pattern match</div>
+      <div class="ai-insight-text">
+        The 47-account attack pattern <strong>matches a Feb 2025 push</strong> attributed to a competitor's PR firm — same posting cadence, similar account-age profile.
+      </div>
+    </div>
+    <div class="ai-insight risk">
+      <div class="ai-insight-label">📍 Geo concentration</div>
+      <div class="ai-insight-text">
+        <strong>78%</strong> of delivery complaints concentrated in <strong>4 Tier-2 cities</strong> (Bhubaneswar, Patna, Indore, Kanpur) — Shiprocket lane issue, not category-wide.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACTION FOOTER ===== -->
+  <div class="action-footer">
+    <div class="action-footer-body">
+      <div class="action-footer-title">4 actions are waiting for your review based on what's shown above.</div>
+      <div class="action-footer-sub">1 distress · 1 attack response · 1 advocate amplification · 1 Reddit engagement plan.</div>
+    </div>
+    <a href="intelligence-llm.html" class="btn btn-secondary btn-sm">Next: LLM Pulse →</a>
+    <a href="actions.html" class="btn btn-primary btn-sm">Open Action Center →</a>
   </div>
 
 </main></div>
