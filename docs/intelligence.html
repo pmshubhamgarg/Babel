@@ -103,10 +103,10 @@
   }
   .ov-meter > div { height: 100%; }
 
-  /* Two-column body: story + action */
+  /* Two-column body: story + top-3 watchlist */
   .ov-body {
     display: grid;
-    grid-template-columns: 1fr 220px;
+    grid-template-columns: 1fr 280px;
     gap: 18px;
     align-items: stretch;
   }
@@ -138,15 +138,176 @@
     background: var(--bg-1);
     border: 1px solid var(--line);
     border-radius: var(--r-sm);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .ov-side-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    color: var(--text-3);
+    text-transform: uppercase;
+    padding: 2px 4px 4px;
+  }
+
+  .ov-side-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--text-4);
+    border-radius: var(--r-sm);
+    transition: all var(--dur) var(--ease);
+  }
+  .ov-side-item:hover {
+    border-color: var(--line-strong);
+  }
+  .ov-side-item.critical    { border-left-color: var(--danger); }
+  .ov-side-item.warning     { border-left-color: var(--warning); }
+  .ov-side-item.opportunity { border-left-color: var(--success); }
+  .ov-side-item.info        { border-left-color: var(--info); }
+
+  .ov-side-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+  .ov-side-item-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: var(--r-sm);
+    background: var(--neutral-soft);
+    color: var(--text-3);
+  }
+  .ov-side-item.critical    .ov-side-item-tag { background: var(--danger-soft);  color: var(--danger); }
+  .ov-side-item.warning     .ov-side-item-tag { background: var(--warning-soft); color: var(--warning); }
+  .ov-side-item.opportunity .ov-side-item-tag { background: var(--success-soft); color: var(--success); }
+  .ov-side-item.info        .ov-side-item-tag { background: var(--info-soft);    color: var(--info); }
+  .ov-side-item-time {
+    font-size: 10px;
+    color: var(--text-3);
+  }
+  .ov-side-item-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .ov-side-item-sub {
+    font-size: 10px;
+    color: var(--text-3);
+    line-height: 1.35;
+  }
+
+  /* ===== Overall drift analysis panel ===== */
+  .ov-drift-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .ov-drift-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--text-4);
+    border-radius: var(--r-sm);
     padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
   }
-  .ov-side-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-3); text-transform: uppercase; }
-  .ov-side-headline { font-size: 12.5px; color: var(--text); font-weight: 600; line-height: 1.35; }
-  .ov-side-foot { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .ov-drift-card.critical { border-left-color: var(--danger);  background: linear-gradient(180deg, var(--danger-soft)  0%, var(--surface) 60%); border-color: #F2C9CC; }
+  .ov-drift-card.warning  { border-left-color: var(--warning); background: linear-gradient(180deg, var(--warning-soft) 0%, var(--surface) 60%); border-color: #F2D9B5; }
+  .ov-drift-card.opp      { border-left-color: var(--success); background: linear-gradient(180deg, var(--success-soft) 0%, var(--surface) 60%); border-color: #C7E5D8; }
+
+  .ov-drift-stream {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    width: fit-content;
+  }
+  .ov-drift-stream::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: var(--r-full);
+    background: currentColor;
+  }
+  .ov-drift-card.critical .ov-drift-stream { color: var(--danger); }
+  .ov-drift-card.warning  .ov-drift-stream { color: var(--warning); }
+  .ov-drift-card.opp      .ov-drift-stream { color: var(--success); }
+
+  .ov-drift-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ov-drift-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.35;
+    flex: 1;
+  }
+  .ov-drift-count {
+    background: var(--surface);
+    border: 1px solid currentColor;
+    border-radius: var(--r-sm);
+    padding: 3px 7px;
+    text-align: center;
+    flex-shrink: 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .ov-drift-card.critical .ov-drift-count { color: var(--danger); }
+  .ov-drift-card.warning  .ov-drift-count { color: var(--warning); }
+  .ov-drift-card.opp      .ov-drift-count { color: var(--success); }
+
+  .ov-drift-sub {
+    font-size: 11px;
+    color: var(--text-3);
+    line-height: 1.45;
+  }
+  .ov-drift-bar {
+    height: 5px;
+    background: var(--neutral-soft);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  .ov-drift-bar > div {
+    height: 100%;
+    border-radius: var(--r-full);
+  }
+  .ov-drift-card.critical .ov-drift-bar > div { background: var(--danger); }
+  .ov-drift-card.warning  .ov-drift-bar > div { background: var(--warning); }
+  .ov-drift-card.opp      .ov-drift-bar > div { background: var(--success); }
+
+  .ov-drift-foot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .ov-drift-foot .lock { font-weight: 600; color: var(--text-2); }
+
+  @media (max-width: 980px) {
+    .ov-drift-grid { grid-template-columns: 1fr; }
+  }
 
   /* AI hit-rate satellite (kept) */
   .ov-hit-strip {
@@ -256,11 +417,30 @@
         </div>
       </div>
       <aside class="ov-side">
-        <div class="ov-side-label">Biggest single risk</div>
-        <div class="ov-side-headline">Priya S. baby rash — legal flagged</div>
-        <div class="ov-side-foot">
-          <span class="badge badge-danger badge-dot">Critical</span>
-          <span class="text-xs muted">3h ago · Instagram</span>
+        <div class="ov-side-label">Top 3 to watch</div>
+        <div class="ov-side-item critical">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Distress</span>
+            <span class="ov-side-item-time">3h · IG</span>
+          </div>
+          <div class="ov-side-item-title">Priya S. baby rash · legal flagged</div>
+          <div class="ov-side-item-sub">2.4K followers · senior CX needed</div>
+        </div>
+        <div class="ov-side-item warning">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Coordinated</span>
+            <span class="ov-side-item-time">5h · 𝕏</span>
+          </div>
+          <div class="ov-side-item-title">47-account #MamaearthLies push</div>
+          <div class="ov-side-item-sub">180K reach · paid · don't engage</div>
+        </div>
+        <div class="ov-side-item opportunity">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Advocate</span>
+            <span class="ov-side-item-time">6h · IG</span>
+          </div>
+          <div class="ov-side-item-title">Ananya Reddy SPF 50 endorsement</div>
+          <div class="ov-side-item-sub">47K · +11 similar creators primed</div>
         </div>
       </aside>
     </div>
@@ -297,11 +477,30 @@
         </div>
       </div>
       <aside class="ov-side">
-        <div class="ov-side-label">Biggest single risk</div>
-        <div class="ov-side-headline">Claude drift on "vegan baby shampoo" → Plum #1</div>
-        <div class="ov-side-foot">
-          <span class="badge badge-warning badge-dot">~14 d to lock-in</span>
-          <span class="text-xs muted">32% there</span>
+        <div class="ov-side-label">Top 3 to watch</div>
+        <div class="ov-side-item critical">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Drift</span>
+            <span class="ov-side-item-time">~14d</span>
+          </div>
+          <div class="ov-side-item-title">Claude → Plum #1 on "vegan baby"</div>
+          <div class="ov-side-item-sub">Day 3 of ~17 · 32% to default</div>
+        </div>
+        <div class="ov-side-item warning">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Slipping</span>
+            <span class="ov-side-item-time">~21d</span>
+          </div>
+          <div class="ov-side-item-title">Gemini sentiment +71 → +52</div>
+          <div class="ov-side-item-sub">Reddit "natural" cites · 18% to default</div>
+        </div>
+        <div class="ov-side-item opportunity">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Surging</span>
+            <span class="ov-side-item-time">~9d</span>
+          </div>
+          <div class="ov-side-item-title">Perplexity sentiment +78 (▲ 11)</div>
+          <div class="ov-side-item-sub">SPF 50 press cited · sustain it</div>
         </div>
       </aside>
     </div>
@@ -341,15 +540,100 @@
         </div>
       </div>
       <aside class="ov-side">
-        <div class="ov-side-label">Biggest single threat</div>
-        <div class="ov-side-headline">Plum "Pure Plant" — gained 18% SoV in 3 days</div>
-        <div class="ov-side-foot">
-          <span class="badge badge-warning badge-dot">Direct overlap</span>
-          <span class="text-xs muted">est. ₹80L spend</span>
+        <div class="ov-side-label">Top 3 to watch</div>
+        <div class="ov-side-item warning">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Threat</span>
+            <span class="ov-side-item-time">3d ago</span>
+          </div>
+          <div class="ov-side-item-title">Plum "Pure Plant" gained +18% SoV</div>
+          <div class="ov-side-item-sub">Direct overlap · est. ₹80L spend</div>
+        </div>
+        <div class="ov-side-item critical">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Contagion</span>
+            <span class="ov-side-item-time">5d into</span>
+          </div>
+          <div class="ov-side-item-title">Patanjali crisis splashing to category</div>
+          <div class="ov-side-item-sub">+89 skeptical mentions of Mamaearth</div>
+        </div>
+        <div class="ov-side-item info">
+          <div class="ov-side-item-top">
+            <span class="ov-side-item-tag">Signal</span>
+            <span class="ov-side-item-time">Tier-1</span>
+          </div>
+          <div class="ov-side-item-title">Forest Essentials 15% price drop</div>
+          <div class="ov-side-item-sub">Premium-segment softness coming</div>
         </div>
       </aside>
     </div>
   </a>
+
+  <!-- ===== OVERALL DRIFT ANALYSIS ===== -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-3);"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+          Overall drift analysis
+        </div>
+        <div class="panel-sub">Three cross-stream trajectories that need attention this week — how long until each becomes the new normal</div>
+      </div>
+      <div class="panel-actions">
+        <span class="panel-freshness">8 min ago</span>
+        <a href="intelligence-llm.html" class="btn btn-ghost btn-sm">See LLM drift in detail →</a>
+      </div>
+    </div>
+
+    <div class="ov-drift-grid">
+
+      <!-- LLM drift (critical) -->
+      <div class="ov-drift-card critical">
+        <div class="ov-drift-stream">LLM</div>
+        <div class="ov-drift-head">
+          <div class="ov-drift-title">Claude now ranks Plum #1 on "best vegan baby shampoo India"</div>
+          <div class="ov-drift-count">~14d</div>
+        </div>
+        <div class="ov-drift-sub">3 days ago you were #1. Driver: Plum's "Pure Plant" campaign citations are spiking across review sites.</div>
+        <div class="ov-drift-bar"><div style="width: 32%;"></div></div>
+        <div class="ov-drift-foot">
+          <span>Day 3 of ~17 estimated</span>
+          <span class="lock">32% to lock-in</span>
+        </div>
+      </div>
+
+      <!-- Competitive drift (warning) -->
+      <div class="ov-drift-card warning">
+        <div class="ov-drift-stream">Competitive</div>
+        <div class="ov-drift-head">
+          <div class="ov-drift-title">Plum closing the SoV gap at +4 pts/week — projected to overtake</div>
+          <div class="ov-drift-count">~6w</div>
+        </div>
+        <div class="ov-drift-sub">3 weeks of consistent +4 pt/wk growth. At current velocity Plum hits 28% (parity with you) by early July.</div>
+        <div class="ov-drift-bar"><div style="width: 24%;"></div></div>
+        <div class="ov-drift-foot">
+          <span>Week 3 of ~6 estimated</span>
+          <span class="lock">~6 weeks to parity</span>
+        </div>
+      </div>
+
+      <!-- Sentiment drift (warning) -->
+      <div class="ov-drift-card warning">
+        <div class="ov-drift-stream">Sentiment</div>
+        <div class="ov-drift-head">
+          <div class="ov-drift-title">Gemini citing 3 Reddit threads questioning "natural" claims</div>
+          <div class="ov-drift-count">~21d</div>
+        </div>
+        <div class="ov-drift-sub">Sentiment slipped +71 → +52 over 6 days. Citation footprint matters — investigate which Reddit threads are weighted.</div>
+        <div class="ov-drift-bar"><div style="width: 18%;"></div></div>
+        <div class="ov-drift-foot">
+          <span>Day 2 of ~23 estimated</span>
+          <span class="lock">18% to lock-in</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ===== AI HIT RATE STRIP (Track Record satellite) ===== -->
   <a href="track-record.html" class="ov-hit-strip">
